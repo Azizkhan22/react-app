@@ -7,11 +7,10 @@ import { FaInstagram, FaFacebook, FaYoutube, FaTwitter } from 'react-icons/fa';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [searchQuery, setSearchQuery] = useState('')
-  const [isSearchOpen, setIsSearchOpen] = useState(false)
-  const { getCartCount } = useCart()
-  const searchRef = useRef(null)
+  const [searchQuery, setSearchQuery] = useState('')  
+  const { getCartCount } = useCart()  
   const searchButtonRef = useRef(null)
+  const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
 
   const navigation = [
     { name: 'Home', href: '/' },
@@ -20,24 +19,6 @@ const Navbar = () => {
     { name: 'About', href: '/about' },
     { name: 'Contact', href: '/contact' }
   ]
-
-  // Close search when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (isSearchOpen && 
-          searchRef.current && 
-          !searchRef.current.contains(event.target) &&
-          searchButtonRef.current && 
-          !searchButtonRef.current.contains(event.target)) {
-        setIsSearchOpen(false)
-      }
-    }
-
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [isSearchOpen])
 
   return (
     <nav className="bg-white shadow-lg sticky top-0 z-50">
@@ -69,7 +50,7 @@ const Navbar = () => {
           {/* Logo */}
           <div className="flex-shrink-0">
             <Link to="/" className="flex items-center">
-              <span className="text-2xl font-bold text-indigo-600">ShopHub</span>
+              <span className="text-2xl font-bold text-[#252B42]">ShopHub</span>
             </Link>
           </div>
 
@@ -90,7 +71,7 @@ const Navbar = () => {
           </div>
 
           {/* Search Bar */}
-          <div ref={searchRef} className={`transition-all duration-300 ease-in-out ${isSearchOpen ? 'visible md:block flex-1 max-w-lg mx-8 opacity-100' : 'invisible md:block flex-1 max-w-lg mx-8 opacity-0'}`}>
+          <div className='transition-all duration-300 ease-in-out hidden lg:block flex-1 max-w-lg mx-8'>
             <div className="relative">
               <input
                 type="text"
@@ -101,23 +82,27 @@ const Navbar = () => {
               />
               <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
             </div>
-          </div>          
+          </div>       
+
           {/* Right side icons */}
-          <div className="hidden md:flex items-center space-x-4">
-            <button ref={searchButtonRef} onClick={() => setIsSearchOpen(!isSearchOpen)} className="text-gray-700 text-indigo-600">
-              <SearchIcon className="h-6 w-6 cursor-pointer" />
-            </button>
-            <div className='flex justify-center items-center space-x-2 text-indigo-600'>
+          <div className="hidden md:flex items-center space-x-4">      
+          <button
+            onClick={() => setIsMobileSearchOpen(!isMobileSearchOpen)}
+            className="block lg:hidden text-[#23A6F0] p-2"
+          >
+            <SearchIcon className="h-6 w-6 cursor-pointer" />
+          </button>
+            <div className='flex justify-center items-center space-x-2 text-[#23A6F0]'>
               <a href="/login" className='flex items-center space-x-2'>
-              <User className="h-6 w-6" />
+              <User className="h-6 w-6 hidden lg:block" />
               <span className='text-sm font-semibold'>Login / Signup</span>
               </a>          
             </div>
-            <Link to="/wishlist" className="text-gray-700 text-indigo-600">
-              <Heart className="h-6 w-6" />
+            <Link to="/wishlist" className="text-gray-700 text-[#23A6F0]">
+              <Heart className="h-6 w-6 text-[#23A6F0]" />
             </Link>            
-            <Link to="/cart" className="text-gray-700 text-indigo-600 relative">
-              <ShoppingCart className="h-6 w-6" />
+            <Link to="/cart" className="text-gray-700 text-[#23A6F0] relative">
+              <ShoppingCart className="h-6 w-6 text-[#23A6F0]" />
               {getCartCount() > 0 && (
                 <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
                   {getCartCount()}
@@ -127,33 +112,47 @@ const Navbar = () => {
           </div>
 
           {/* Mobile menu button */}
-          <div className="md:hidden">
+          <div className="md:hidden flex justify-center items-center space-x-4">
             <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-gray-700 hover:text-indigo-600"
+              onClick={() => setIsMobileSearchOpen(!isMobileSearchOpen)}
+              className="block lg:hidden text-black"
             >
-              {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              <SearchIcon className="h-5 w-5 cursor-pointer" />
             </button>
+            <Link to="/cart" className="text-black relative">
+                <ShoppingCart className="h-5 w-5 text-black" />
+                {getCartCount() > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                    {getCartCount()}
+                  </span>
+                )}
+              </Link>
+              <button
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className="text-gray-700 hover:text-indigo-600"
+              >
+                {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              </button>
           </div>
         </div>
 
         {/* Mobile Search */}
-        <div className="md:hidden mb-4">
-          <div className="relative">
+        <div className={`fixed top-0 left-0 w-full h-[80px] md:h-[110px] flex justify-center items-center z-50 p-2 bg-[#23A6F0] opacity-90 transition-transform duration-300 rounded-b-3xl ${!isMobileSearchOpen ? 'translate-y-[-80px] sm:translate-y-[-80px] md:translate-y-[-110px]' : 'translate-y-[0px]'}`}>          
+          <div className="relative w-full">
             <input
               type="text"
               placeholder="Search products..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              className="w-full pl-10 pr-4 py-2 border border-white text-white rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-300 focus:border-transparent"
             />
-            <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
+            <Search className="absolute left-3 top-2.5 h-5 w-5 text-white" />
+            <span onClick={() => setIsMobileSearchOpen(!isMobileSearchOpen)} className='absolute right-3 top-2.5 h-5 w-5 text-white cursor-pointer'>X</span>
           </div>
         </div>
-
-        {/* Mobile Navigation */}
-        {isMenuOpen && (
-          <div className="md:hidden">
+      
+        {/* Mobile Navigation */}        
+          <div className={`absolute left-0 w-full md:hidden z-45 transition-all duration-500 ease-in-out overflow-hidden ${isMenuOpen ? 'max-h-[400px]' : 'max-h-[0px]'}`}>
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white border-t">
               {navigation.map((item) => (
                 <Link
@@ -182,8 +181,7 @@ const Navbar = () => {
                 </Link>
               </div>
             </div>
-          </div>
-        )}
+          </div>        
       </div>
     </nav>
   )
