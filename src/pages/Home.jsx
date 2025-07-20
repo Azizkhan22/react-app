@@ -1,108 +1,194 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowRight, Star, Truck, Shield, RefreshCw, CreditCard } from 'lucide-react'
+import { ArrowRight, ArrowLeft, Star, Truck, Shield, RefreshCw, CreditCard } from 'lucide-react'
 import ProductCard from '../components/ProductCard'
 import Button from '../components/Button'
+import heroImage from '../assets/hero.jpg'
 
 const Home = () => {
   const [currentSlide, setCurrentSlide] = useState(0)
+  const [heroTransitioning, setHeroTransitioning] = useState(false)
+
+  const nextSlide = () => {
+    setHeroTransitioning(true)
+    setTimeout(() => {
+      setCurrentSlide((prev) => (prev + 1) % heroSlides.length)
+      setHeroTransitioning(false)
+    }, 300)
+  }
+
+  const prevSlide = () => {
+    setHeroTransitioning(true)
+    setTimeout(() => {
+      setCurrentSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length)
+      setHeroTransitioning(false)
+    }, 300)
+  }
+
+  // Hero slides data
+  const heroSlides = [
+    {
+      title: "Discover Amazing Products",
+      subtitle: "Shop the latest trends and find your perfect style",
+      cta: "Shop Now",
+      image: heroImage
+    },
+    {
+      title: "Exclusive Deals & Offers",
+      subtitle: "Get up to 50% off on selected items",
+      cta: "Explore Deals",
+      image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1200&h=600&fit=crop"
+    },
+    {
+      title: "Premium Quality Guaranteed",
+      subtitle: "Quality products with excellent customer service",
+      cta: "Learn More",
+      image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1200&h=600&fit=crop"
+    }
+  ]
 
   // Mock data for featured products
   const featuredProducts = [
     {
       id: 1,
-      name: "Wireless Bluetooth Headphones",
-      price: 89.99,
-      originalPrice: 129.99,
-      image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=300&fit=crop",
+      name: "Premium Cotton T-Shirt",
+      price: 29.99,
+      originalPrice: 39.99,
+      image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=300&fit=crop",
       rating: 4,
       reviews: 128,
-      discount: 30
+      discount: 25
     },
     {
       id: 2,
-      name: "Smart Fitness Watch",
-      price: 199.99,
-      image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=300&fit=crop",
+      name: "Designer Denim Jeans",
+      price: 89.99,
+      image: "https://images.unsplash.com/photo-1542272604-787c3835535d?w=400&h=300&fit=crop",
       rating: 5,
       reviews: 89
     },
     {
       id: 3,
-      name: "Premium Coffee Maker",
-      price: 149.99,
-      originalPrice: 199.99,
-      image: "https://images.unsplash.com/photo-1517668808822-9ebb02f2a0e6?w=400&h=300&fit=crop",
+      name: "Casual Summer Dress",
+      price: 59.99,
+      originalPrice: 79.99,
+      image: "https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=400&h=300&fit=crop",
       rating: 4,
       reviews: 67,
       discount: 25
     },
     {
       id: 4,
-      name: "Organic Cotton T-Shirt",
-      price: 29.99,
-      image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=300&fit=crop",
+      name: "Leather Crossbody Bag",
+      price: 49.99,
+      image: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=400&h=300&fit=crop",
       rating: 4,
       reviews: 156
     }
   ]
 
   const categories = [
-    { name: "Electronics", image: "https://images.unsplash.com/photo-1498049794561-7780e7231661?w=300&h=200&fit=crop", count: 150 },
-    { name: "Fashion", image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=300&h=200&fit=crop", count: 200 },
-    { name: "Home & Garden", image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=300&h=200&fit=crop", count: 120 },
-    { name: "Sports", image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=300&h=200&fit=crop", count: 80 }
+    { name: "Men's Clothing", image: "https://images.unsplash.com/photo-1617137968427-85924c800a22?w=300&h=200&fit=crop", count: 150 },
+    { name: "Women's Fashion", image: "https://images.unsplash.com/photo-1445205170230-053b83016050?w=300&h=200&fit=crop", count: 200 },
+    { name: "Kids & Baby", image: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=300&h=200&fit=crop", count: 120 },
+    { name: "Accessories", image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=300&h=200&fit=crop", count: 80 }
   ]
 
-  const heroSlides = [
+  // Admin-featured products carousel data
+  const adminCarousel = [
     {
-      title: "Summer Collection 2024",
-      subtitle: "Discover the latest trends in fashion and lifestyle",
-      image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1200&h=600&fit=crop",
-      cta: "Shop Now"
+      season: "SUMMER 2020",
+      title: "Vita Classic Product",
+      description:
+        "We know how large objects will act. We know how are objects will act. We know how are objects will act. We know",
+      price: 16.48,
+      image:
+        "https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&w=600&h=800&fit=crop",
     },
     {
-      title: "Tech Gadgets Sale",
-      subtitle: "Up to 50% off on electronics and smart devices",
-      image: "https://images.unsplash.com/photo-1498049794561-7780e7231661?w=1200&h=600&fit=crop",
-      cta: "Explore Deals"
-    }
-  ]
+      season: "WINTER 2020",
+      title: "Modern Winter Jacket",
+      description:
+        "Stay warm and stylish with our premium winter collection. Limited stock available!",
+      price: 49.99,
+      image:
+        "https://images.pexels.com/photos/1707828/pexels-photo-1707828.jpeg?auto=compress&w=600&h=800&fit=crop",
+    },
+    {
+      season: "SPRING 2021",
+      title: "Fresh Spring Look",
+      description:
+        "Refresh your wardrobe with our new spring arrivals. Bright colors and comfy fits!",
+      price: 29.99,
+      image:
+        "https://images.pexels.com/photos/1138903/pexels-photo-1138903.jpeg?auto=compress&w=600&h=800&fit=crop",
+    },
+  ];
+  const [adminCurrent, setAdminCurrent] = useState(0);
+  const [adminTransitioning, setAdminTransitioning] = useState(false);
+  const nextAdmin = () => {
+    setAdminTransitioning(true);
+    setTimeout(() => {
+      setAdminCurrent((prev) => (prev + 1) % adminCarousel.length);
+      setAdminTransitioning(false);
+    }, 300);
+  };
+  const prevAdmin = () => {
+    setAdminTransitioning(true);
+    setTimeout(() => {
+      setAdminCurrent((prev) => (prev - 1 + adminCarousel.length) % adminCarousel.length);
+      setAdminTransitioning(false);
+    }, 300);
+  };
 
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative h-64 md:h-80 lg:h-96 overflow-hidden">
-        <div className="relative h-full max-w-screen-lg mx-auto">
+      <section className="relative p-5 h-64 md:h-80 lg:h-96 overflow-hidden">
+        <div className="relative h-full mx-auto">
           <img
             src={heroSlides[currentSlide].image}
             alt="Hero"
-            className="w-full h-full object-cover object-center max-h-96 rounded-lg"
+            className={`w-full h-full object-cover object-center max-h-96 transition-all duration-500 ease-in-out ${heroTransitioning ? 'opacity-0' : 'opacity-100'}`}
           />
-          <div className="absolute inset-0 bg-black bg-opacity-30 rounded-lg"></div>
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="text-center text-white px-2 md:px-4">
-              <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-2 md:mb-4">
+            <div className={`text-center text-white px-4 sm:px-6 md:px-8 transition-all duration-500 ease-in-out ${heroTransitioning ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'}`}> 
+              <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold mb-3 sm:mb-4 md:mb-6">
                 {heroSlides[currentSlide].title}
               </h1>
-              <p className="text-base md:text-lg mb-4 md:mb-6 max-w-xl mx-auto">
+              <p className="text-sm sm:text-base md:text-lg lg:text-xl mb-4 sm:mb-6 md:mb-8 max-w-md sm:max-w-lg md:max-w-xl mx-auto">
                 {heroSlides[currentSlide].subtitle}
               </p>
-              <Button size="md" className="text-base px-6 py-2">
+              <Button size="md" className="text-sm sm:text-base !bg-[#2DC071] px-3 sm:px-6 py-2 sm:py-3">
                 {heroSlides[currentSlide].cta}
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </div>
           </div>
         </div>
+
+        {/* Navigation Arrows */}
+        <button
+          onClick={prevSlide}
+          className="absolute left-4 sm:left-6 md:left-8 top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white p-1 sm:p-2 rounded-full transition-all duration-300 z-10"
+        >
+          <ArrowLeft className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6" />
+        </button>
+        <button
+          onClick={nextSlide}
+          className="absolute right-4 sm:right-6 md:right-8 top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white p-1 sm:p-2 rounded-full transition-all duration-300 z-10"
+        >
+          <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6" />
+        </button>
+
         {/* Hero Navigation Dots */}
-        <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-1">
-          {heroSlides.map((_, index) => (
+        <div className="absolute bottom-7 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+          {heroSlides.map((_, idx) => (
             <button
-              key={index}
-              onClick={() => setCurrentSlide(index)}
-              className={`w-2 h-2 rounded-full transition-colors ${
-                index === currentSlide ? 'bg-white' : 'bg-white bg-opacity-50'
+              key={idx}
+              onClick={() => setCurrentSlide(idx)}
+              className={`w-8 h-1 rounded-full transition-all duration-300 ${
+                idx === currentSlide ? 'bg-white' : 'bg-white/50'
               }`}
             />
           ))}
@@ -114,29 +200,29 @@ const Home = () => {
         <div className="max-w-screen-lg mx-auto px-2 md:px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
             <div className="text-center">
-              <div className="bg-indigo-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-2">
-                <Truck className="h-6 w-6 text-indigo-600" />
+              <div className="bg-[#23A6F0]/10 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-2">
+                <Truck className="h-6 w-6 text-[#23A6F0]" />
               </div>
               <h3 className="text-base font-semibold mb-1">Free Shipping</h3>
               <p className="text-xs text-gray-600">Free shipping on orders over $50</p>
             </div>
             <div className="text-center">
-              <div className="bg-green-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-2">
-                <Shield className="h-6 w-6 text-green-600" />
+              <div className="bg-[#23A6F0]/10 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-2">
+                <Shield className="h-6 w-6 text-[#23A6F0]" />
               </div>
               <h3 className="text-base font-semibold mb-1">Secure Payment</h3>
               <p className="text-xs text-gray-600">100% secure payment processing</p>
             </div>
             <div className="text-center">
-              <div className="bg-blue-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-2">
-                <RefreshCw className="h-6 w-6 text-blue-600" />
+              <div className="bg-[#23A6F0]/10 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-2">
+                <RefreshCw className="h-6 w-6 text-[#23A6F0]" />
               </div>
               <h3 className="text-base font-semibold mb-1">Easy Returns</h3>
               <p className="text-xs text-gray-600">30-day return policy</p>
             </div>
             <div className="text-center">
-              <div className="bg-purple-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-2">
-                <CreditCard className="h-6 w-6 text-purple-600" />
+              <div className="bg-[#23A6F0]/10 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-2">
+                <CreditCard className="h-6 w-6 text-[#23A6F0]" />
               </div>
               <h3 className="text-base font-semibold mb-1">Flexible Payment</h3>
               <p className="text-xs text-gray-600">Multiple payment options available</p>
@@ -151,7 +237,7 @@ const Home = () => {
           <div className="text-center mb-6">
             <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-2">Shop by Category</h2>
             <p className="text-sm text-gray-600 max-w-xl mx-auto">
-              Explore our wide range of products across different categories
+              Explore our wide range of fashion and clothing categories
             </p>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
@@ -165,13 +251,13 @@ const Home = () => {
                   <img
                     src={category.image}
                     alt={category.name}
-                    className="w-full h-28 md:h-32 object-contain group-hover:scale-105 transition-transform duration-300 bg-gray-100 rounded"
+                    className="w-full h-28 md:h-32 object-cover group-hover:scale-105 transition-transform duration-300 rounded-t-lg"
                   />
-                  <div className="absolute inset-0 bg-black bg-opacity-10 group-hover:bg-opacity-20 transition-colors rounded"></div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent rounded-t-lg"></div>
                   <div className="absolute inset-0 flex items-center justify-center">
                     <div className="text-center text-white">
-                      <h3 className="text-base font-semibold mb-1">{category.name}</h3>
-                      <p className="text-xs opacity-90">{category.count} Products</p>
+                      <h3 className="text-base font-bold mb-1 drop-shadow-lg">{category.name}</h3>
+                      <p className="text-xs opacity-90 drop-shadow-md">{category.count} Products</p>
                     </div>
                   </div>
                 </div>
@@ -186,12 +272,12 @@ const Home = () => {
         <div className="max-w-screen-lg mx-auto px-2 md:px-4">
           <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-6 gap-2">
             <div>
-              <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-1">Featured Products</h2>
-              <p className="text-sm text-gray-600">Handpicked products for you</p>
+              <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-1">Featured Fashion</h2>
+              <p className="text-sm text-gray-600">Handpicked clothing and accessories for you</p>
             </div>
             <Link
               to="/products"
-              className="text-indigo-600 hover:text-indigo-700 font-medium flex items-center text-sm"
+              className="text-[#23A6F0] hover:text-[#1e8fd8] font-medium flex items-center text-sm"
             >
               View All
               <ArrowRight className="ml-1 h-4 w-4" />
@@ -203,15 +289,75 @@ const Home = () => {
             ))}
           </div>
         </div>
+      </section>  
+
+      {/* Admin Carousel Section */}
+      <section className="w-full bg-[#219653] relative flex flex-col md:flex-row items-center justify-around min-h-[350px] md:min-h-[400px] lg:min-h-[440px] overflow-hidden mb-8 px-4 py-6 md:px-0">
+        {/* Left: Info */}
+        <div className={`flex flex-col justify-center items-center md:items-end md:pr-8 lg:pr-16 z-10 max-w-xl md:max-w-lg lg:max-w-xl text-center md:text-right transition-all duration-500 ease-in-out ${adminTransitioning ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'}`}> 
+          <span className="text-white text-xs md:text-sm mb-2 tracking-widest uppercase opacity-80">
+            {adminCarousel[adminCurrent].season}
+          </span>
+          <h2 className="text-white text-2xl md:text-4xl font-bold mb-2 md:mb-4 leading-tight">
+            {adminCarousel[adminCurrent].title}
+          </h2>
+          <p className="text-white text-sm md:text-base mb-4 max-w-md opacity-90">
+            {adminCarousel[adminCurrent].description}
+          </p>
+          <div className="flex flex-col md:flex-row items-center md:items-end justify-center md:justify-end gap-2 md:gap-4 mb-4">
+            <span className="text-white text-lg md:text-xl font-bold">
+              ${adminCarousel[adminCurrent].price.toFixed(2)}
+            </span>
+            <Button size="md" className="!bg-[#2DC071] px-4 py-2 text-white font-semibold mt-2 md:mt-0">
+              ADD TO CART
+            </Button>
+          </div>
+        </div>
+        {/* Right: Image */}
+        <div className={`flex items-center justify-center md:justify-start h-full relative z-10 mt-6 md:mt-0 transition-all duration-500 ease-in-out ${adminTransitioning ? 'opacity-0' : 'opacity-100'}`}> 
+          <img
+            src={adminCarousel[adminCurrent].image}
+            alt={adminCarousel[adminCurrent].title}
+            className="object-contain h-[220px] xs:h-[260px] sm:h-[300px] md:h-[340px] lg:h-[400px] w-auto drop-shadow-xl select-none pointer-events-none"
+            draggable="false"
+          />
+        </div>
+        {/* Arrows */}
+        <button
+          onClick={prevAdmin}
+          className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 text-white p-2 rounded-full z-20"
+        >
+          <ArrowLeft className="h-6 w-6" />
+        </button>
+        <button
+          onClick={nextAdmin}
+          className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 text-white p-2 rounded-full z-20"
+        >
+          <ArrowRight className="h-6 w-6" />
+        </button>
+        {/* Dots */}
+        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+          {adminCarousel.map((_, idx) => (
+            <button
+              key={idx}
+              onClick={() => setAdminCurrent(idx)}
+              className={`w-8 h-1 rounded-full transition-all duration-300 ${
+                idx === adminCurrent ? 'bg-white' : 'bg-white/50'
+              }`}
+            />
+          ))}
+        </div>
+        {/* BG overlay for image fade */}
+        <div className="absolute inset-0 bg-[#219653] opacity-90 pointer-events-none" />
       </section>
 
       {/* Newsletter Section */}
-      <section className="py-8 bg-indigo-600">
-        <div className="max-w-screen-md mx-auto px-2 md:px-4 text-center">
-          <h2 className="text-xl md:text-2xl font-bold text-white mb-2">
+      <section className="py-8 bg-[#FAFAFA]">
+        <div className="max-w-screen-md mx-auto px-2 md:px-4 text-center bg-gray-100 rounded-lg p-6">
+          <h2 className="text-xl md:text-2xl font-bold text-black mb-2">
             Stay Updated
           </h2>
-          <p className="text-indigo-100 mb-4 text-base">
+          <p className="text-black/90 mb-4 text-base">
             Subscribe to our newsletter for the latest products and exclusive offers
           </p>
           <div className="flex flex-col sm:flex-row gap-2 max-w-md mx-auto">

@@ -18,69 +18,60 @@ const ProductCard = ({ product }) => {
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden group">
-      <Link to={`/product/${product.id}`} className="block">
+    <div className="bg-white shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden group h-full flex flex-col border border-gray-100">
+      <Link to={`/product/${product.id}`} className="block flex-1">
         <div className="relative overflow-hidden">
           <img
             src={product.image}
             alt={product.name}
-            className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+            className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
           />
           <button
             onClick={handleWishlist}
-            className="absolute top-2 right-2 p-2 bg-white rounded-full shadow-md hover:bg-gray-100 transition-colors"
+            className="absolute top-3 right-3 p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-sm hover:bg-white transition-colors"
           >
             <Heart
-              className={`h-5 w-5 ${
-                isWishlisted ? 'fill-red-500 text-red-500' : 'text-gray-400'
+              className={`h-4 w-4 ${
+                isWishlisted ? 'fill-red-500 text-red-500' : 'text-gray-600'
               }`}
             />
           </button>
           {product.discount && (
-            <div className="absolute top-2 left-2 bg-red-500 text-white px-2 py-1 rounded text-sm font-medium">
+            <div className="absolute top-3 left-3 bg-red-500 text-white px-2 py-1 rounded-full text-xs font-medium">
               -{product.discount}%
             </div>
           )}
         </div>
       </Link>
 
-      <div className="p-4">
-        <Link to={`/product/${product.id}`}>
-          <h3 className="text-lg font-semibold text-gray-800 mb-2 hover:text-indigo-600 transition-colors">
+      <div className="p-5 flex-1 flex flex-col">
+        <Link to={`/product/${product.id}`} className="flex-1">
+          <h3 className="text-base font-medium text-gray-900 mb-1 hover:text-[#23A6F0] transition-colors line-clamp-1">
             {product.name}
           </h3>
+          <p className="text-sm text-gray-500 mb-3">Fashion Department</p>
         </Link>
         
-        <div className="flex items-center mb-2">
-          <div className="flex items-center">
-            {[...Array(5)].map((_, i) => (
-              <Star
-                key={i}
-                className={`h-4 w-4 ${
-                  i < product.rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'
-                }`}
-              />
-            ))}
-          </div>
-          <span className="text-sm text-gray-500 ml-2">({product.reviews})</span>
-        </div>
-
-        <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center justify-between mb-4">
           <div className="flex items-center space-x-2">
-            <span className="text-xl font-bold text-gray-900">${product.price}</span>
             {product.originalPrice && (
-              <span className="text-sm text-gray-500 line-through">${product.originalPrice}</span>
+              <span className="text-sm text-gray-400 line-through">${product.originalPrice}</span>
             )}
+            <span className="text-lg font-semibold text-gray-900">${product.price}</span>
           </div>
+          
         </div>
 
-        <button
-          onClick={handleAddToCart}
-          className="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors flex items-center justify-center space-x-2"
-        >
-          <ShoppingCart className="h-5 w-5" />
-          <span>Add to Cart</span>
-        </button>
+        {/* Color Swatches */}
+        <div className="flex items-center space-x-2">
+          <span className="text-xs text-gray-500">Colors:</span>
+          <div className="flex space-x-1">
+            <div className="w-4 h-4 bg-blue-500 rounded-full border border-gray-200"></div>
+            <div className="w-4 h-4 bg-green-500 rounded-full border border-gray-200"></div>
+            <div className="w-4 h-4 bg-orange-500 rounded-full border border-gray-200"></div>
+            <div className="w-4 h-4 bg-black rounded-full border border-gray-200"></div>
+          </div>
+        </div>
       </div>
     </div>
   )

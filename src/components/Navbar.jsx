@@ -61,7 +61,7 @@ const Navbar = () => {
                 <Link
                   key={item.name}
                   to={item.href}
-                  className="hover:!text-indigo-600 px-3 py-2 rounded-md text-sm font-semibold transition-colors"
+                  className="hover:!text-[#23A6F0] px-3 py-2 rounded-md text-sm font-semibold transition-colors"
                   style={{color: '#737373'}}
                 >
                   {item.name}
@@ -78,7 +78,7 @@ const Navbar = () => {
                 placeholder="Search products..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:text-[#23A6F0] focus:border-transparent"
               />
               <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
             </div>
@@ -115,12 +115,12 @@ const Navbar = () => {
           <div className="md:hidden flex justify-center items-center space-x-4">
             <button
               onClick={() => setIsMobileSearchOpen(!isMobileSearchOpen)}
-              className="block lg:hidden text-black"
+              className="block lg:hidden text-black hover:text-[#23A6F0]"
             >
               <SearchIcon className="h-5 w-5 cursor-pointer" />
             </button>
-            <Link to="/cart" className="text-black relative">
-                <ShoppingCart className="h-5 w-5 text-black" />
+            <Link to="/cart" className="text-black relative hover:text-[#23A6F0]">
+                <ShoppingCart className="h-5 w-5 text-black hover:text-[#23A6F0]" />
                 {getCartCount() > 0 && (
                   <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
                     {getCartCount()}
@@ -129,7 +129,7 @@ const Navbar = () => {
               </Link>
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="text-gray-700 hover:text-indigo-600"
+                className="text-gray-700 hover:text-[#23A6F0]"
               >
                 {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
               </button>
@@ -137,7 +137,7 @@ const Navbar = () => {
         </div>
 
         {/* Mobile Search */}
-        <div className={`fixed top-0 left-0 w-full h-[80px] md:h-[110px] flex justify-center items-center z-50 p-2 bg-[#23A6F0] opacity-90 transition-transform duration-300 rounded-b-3xl ${!isMobileSearchOpen ? 'translate-y-[-80px] sm:translate-y-[-80px] md:translate-y-[-110px]' : 'translate-y-[0px]'}`}>          
+        <div className={`fixed top-0 left-0 w-full h-[80px] md:h-[110px] flex justify-center items-center z-50 p-2 bg-[#676D75] opacity-100 transition-transform duration-300 rounded-md ${!isMobileSearchOpen ? 'translate-y-[-80px] sm:translate-y-[-80px] md:translate-y-[-110px]' : 'translate-y-[0px]'}`}>          
           <div className="relative w-full">
             <input
               type="text"
@@ -152,26 +152,26 @@ const Navbar = () => {
         </div>
       
         {/* Mobile Navigation */}        
-          <div className={`absolute left-0 w-full md:hidden z-45 transition-all duration-500 ease-in-out overflow-hidden ${isMenuOpen ? 'max-h-[400px]' : 'max-h-[0px]'}`}>
+          <div className={`absolute left-0 w-full md:hidden z-45 transition-all duration-500 ease-in-out overflow-hidden border-b-1 border-gray-300 shadow-black shadow-md ${isMenuOpen ? 'max-h-[400px]' : 'max-h-[0px]'}`}>
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white border-t">
               {navigation.map((item) => (
                 <Link
                   key={item.name}
                   to={item.href}
-                  className="text-gray-700 hover:text-indigo-600 block px-3 py-2 rounded-md text-base font-medium"
+                  className="text-gray-700 hover:text-[#23A6F0] block px-3 py-2 rounded-md text-base font-medium"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {item.name}
                 </Link>
               ))}
-              <div className="flex items-center space-x-4 pt-4 border-t">
-                <Link to="/wishlist" className="text-gray-700 hover:text-indigo-600">
+              <div className="flex items-center justify-around space-x-4 pt-4 border-t">
+                <Link to="/wishlist" className="text-gray-700 hover:text-[#23A6F0]">
                   <Heart className="h-6 w-6" />
                 </Link>
-                <Link to="/profile" className="text-gray-700 hover:text-indigo-600">
+                <Link to="/profile" className="text-gray-700 hover:text-[#23A6F0]">
                   <User className="h-6 w-6" />
                 </Link>
-                <Link to="/cart" className="text-gray-700 hover:text-indigo-600 relative">
+                <Link to="/cart" className="text-gray-700 hover:text-[#23A6F0] relative">
                   <ShoppingCart className="h-6 w-6" />
                   {getCartCount() > 0 && (
                     <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">

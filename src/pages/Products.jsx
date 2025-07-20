@@ -1,268 +1,279 @@
 import { useState } from 'react'
-import { Grid, List, Filter, SortAsc, SortDesc } from 'lucide-react'
+import { Grid, List, Filter, X, SortAsc } from 'lucide-react'
 import ProductCard from '../components/ProductCard'
 
 const Products = () => {
-  const [viewMode, setViewMode] = useState('grid')
-  const [sortBy, setSortBy] = useState('featured')
-  const [priceRange, setPriceRange] = useState([0, 1000])
-  const [selectedCategories, setSelectedCategories] = useState([])
+  // Mock categories data
+  const categories = [
+    {
+      name: 'Cloths',
+      image: 'https://images.pexels.com/photos/532220/pexels-photo-532220.jpeg?auto=compress&w=400&h=400&fit=crop',
+      count: 5,
+    },
+    {
+      name: 'Cloths',
+      image: 'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&w=400&h=400&fit=crop',
+      count: 5,
+    },
+    {
+      name: 'Cloths',
+      image: 'https://images.pexels.com/photos/1488463/pexels-photo-1488463.jpeg?auto=compress&w=400&h=400&fit=crop',
+      count: 5,
+    },
+    {
+      name: 'Cloths',
+      image: 'https://images.pexels.com/photos/1130626/pexels-photo-1130626.jpeg?auto=compress&w=400&h=400&fit=crop',
+      count: 5,
+    },
+    {
+      name: 'Cloths',
+      image: 'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&w=400&h=400&fit=crop',
+      count: 5,
+    },
+  ];
 
   // Mock products data
   const products = [
     {
       id: 1,
-      name: "Wireless Bluetooth Headphones",
-      price: 89.99,
-      originalPrice: 129.99,
-      image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=300&fit=crop",
-      rating: 4,
-      reviews: 128,
-      discount: 30,
-      category: "Electronics"
+      name: 'Yellow Shirt',
+      price: 29.99,
+      image: 'https://images.pexels.com/photos/1707828/pexels-photo-1707828.jpeg?auto=compress&w=400&h=400&fit=crop',
+      category: 'Cloths',
     },
     {
       id: 2,
-      name: "Smart Fitness Watch",
-      price: 199.99,
-      image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=300&fit=crop",
-      rating: 5,
-      reviews: 89,
-      category: "Electronics"
+      name: 'Blue Dress',
+      price: 49.99,
+      image: 'https://images.pexels.com/photos/532220/pexels-photo-532220.jpeg?auto=compress&w=400&h=400&fit=crop',
+      category: 'Cloths',
     },
     {
       id: 3,
-      name: "Premium Coffee Maker",
-      price: 149.99,
-      originalPrice: 199.99,
-      image: "https://images.unsplash.com/photo-1517668808822-9ebb02f2a0e6?w=400&h=300&fit=crop",
-      rating: 4,
-      reviews: 67,
-      discount: 25,
-      category: "Home & Garden"
+      name: 'White Top',
+      price: 19.99,
+      image: 'https://images.pexels.com/photos/1488463/pexels-photo-1488463.jpeg?auto=compress&w=400&h=400&fit=crop',
+      category: 'Cloths',
     },
     {
       id: 4,
-      name: "Organic Cotton T-Shirt",
-      price: 29.99,
-      image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=300&fit=crop",
-      rating: 4,
-      reviews: 156,
-      category: "Fashion"
+      name: 'Casual Jacket',
+      price: 59.99,
+      image: 'https://images.pexels.com/photos/1130626/pexels-photo-1130626.jpeg?auto=compress&w=400&h=400&fit=crop',
+      category: 'Cloths',
     },
     {
       id: 5,
-      name: "Running Shoes",
-      price: 79.99,
-      image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&h=300&fit=crop",
-      rating: 4,
-      reviews: 203,
-      category: "Sports"
-    },
-    {
-      id: 6,
-      name: "Laptop Stand",
+      name: 'Trendy Outfit',
       price: 39.99,
-      image: "https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=400&h=300&fit=crop",
-      rating: 4,
-      reviews: 45,
-      category: "Electronics"
+      image: 'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&w=400&h=400&fit=crop',
+      category: 'Cloths',
     },
-    {
-      id: 7,
-      name: "Yoga Mat",
-      price: 24.99,
-      image: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=400&h=300&fit=crop",
-      rating: 4,
-      reviews: 78,
-      category: "Sports"
-    },
-    {
-      id: 8,
-      name: "Desk Lamp",
-      price: 59.99,
-      image: "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=400&h=300&fit=crop",
-      rating: 4,
-      reviews: 92,
-      category: "Home & Garden"
-    }
-  ]
+    // Add more products as needed
+  ];
 
-  const categories = ["Electronics", "Fashion", "Home & Garden", "Sports"]
-
-  const handleCategoryChange = (category) => {
-    setSelectedCategories(prev => 
-      prev.includes(category)
-        ? prev.filter(c => c !== category)
-        : [...prev, category]
-    )
+  // Add more products for pagination (must be before filtering/sorting)
+  while (products.length < 16) {
+    products.push({
+      id: products.length + 1,
+      name: `Product ${products.length + 1}`,
+      price: 19.99 + products.length,
+      image: 'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&w=400&h=400&fit=crop',
+      category: 'Cloths',
+    });
   }
 
-  const filteredProducts = products.filter(product => {
-    const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(product.category)
-    const matchesPrice = product.price >= priceRange[0] && product.price <= priceRange[1]
-    return matchesCategory && matchesPrice
-  })
+  // All useState hooks at the top
+  const [selectedCategory, setSelectedCategory] = useState(categories[0].name);
+  const [viewMode, setViewMode] = useState('grid');
+  const [sortBy, setSortBy] = useState('popularity');
+  const [showFilter, setShowFilter] = useState(false);
+  const [priceRange, setPriceRange] = useState([0, 100]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const productsPerPage = 8;
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
+  // Filtered and sorted products
+  const filteredProducts = products.filter(
+    (p) => !selectedCategory || p.category === selectedCategory
+  );
   const sortedProducts = [...filteredProducts].sort((a, b) => {
     switch (sortBy) {
       case 'price-low':
-        return a.price - b.price
+        return a.price - b.price;
       case 'price-high':
-        return b.price - a.price
-      case 'rating':
-        return b.rating - a.rating
-      case 'reviews':
-        return b.reviews - a.reviews
+        return b.price - a.price;
       default:
-        return 0
+        return 0;
     }
-  })
+  });
+
+  const totalPages = Math.ceil(sortedProducts.length / productsPerPage);
+  const paginatedProducts = sortedProducts.slice(
+    (currentPage - 1) * productsPerPage,
+    currentPage * productsPerPage
+  );
+
+  // Pagination controls with transition
+  const goToPage = (page) => {
+    if (page < 1 || page > totalPages || page === currentPage) return;
+    setIsTransitioning(true);
+    setTimeout(() => {
+      setCurrentPage(page);
+      setIsTransitioning(false);
+    }, 300);
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">All Products</h1>
-          <p className="text-gray-600">Discover our amazing collection of products</p>
+        {/* Top Category Images */}
+        <div className="flex gap-4 mb-8 overflow-x-auto pb-2">
+          {categories.map((cat, idx) => (
+            <button
+              key={idx}
+              onClick={() => setSelectedCategory(cat.name)}
+              className={`relative group flex-shrink-0 w-40 h-48 overflow-hidden transition-all duration-200 ${selectedCategory === cat.name ? 'shadow-lg' : ''}`}
+            >
+              <img src={cat.image} alt={cat.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+              <div className="absolute inset-0 bg-black/30 flex flex-col items-center justify-center">
+                <span className="text-white font-bold text-lg drop-shadow">{cat.name.toUpperCase()}</span>
+                <span className="text-white text-sm mt-1 drop-shadow">{cat.count} items</span>
+              </div>
+            </button>
+          ))}
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* Filters Sidebar */}
-          <div className="lg:w-64 flex-shrink-0">
-            <div className="bg-white rounded-lg shadow-md p-6">
+        {/* Controls Row */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+          <div className="text-gray-700 text-sm">
+            Showing all {sortedProducts.length} results
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-gray-600 text-sm hidden sm:inline">Views:</span>
+            <button
+              onClick={() => setViewMode('grid')}
+              className={`p-2 rounded ${viewMode === 'grid' ? 'bg-blue-100 text-blue-600' : 'text-gray-400 hover:text-gray-600'}`}
+            >
+              <Grid className="h-4 w-4" />
+            </button>
+            <button
+              onClick={() => setViewMode('list')}
+              className={`p-2 rounded ${viewMode === 'list' ? 'bg-blue-100 text-blue-600' : 'text-gray-400 hover:text-gray-600'}`}
+            >
+              <List className="h-4 w-4" />
+            </button>
+            <select
+              value={sortBy}
+              onChange={e => setSortBy(e.target.value)}
+              className="border border-gray-300 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="popularity">Popularity</option>
+              <option value="price-low">Price: Low to High</option>
+              <option value="price-high">Price: High to Low</option>
+            </select>
+            <button
+              className="ml-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+              onClick={() => setShowFilter(true)}
+            >
+              <Filter className="inline h-4 w-4 mr-1" /> Filter
+            </button>
+          </div>
+        </div>
+
+        {/* Filter Modal */}
+        {showFilter && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+            <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-sm relative">
+              <button className="absolute top-2 right-2 text-gray-400 hover:text-gray-600" onClick={() => setShowFilter(false)}>
+                <X className="h-5 w-5" />
+              </button>
               <h3 className="text-lg font-semibold mb-4 flex items-center">
-                <Filter className="h-5 w-5 mr-2" />
-                Filters
+                <Filter className="h-5 w-5 mr-2" /> Filters
               </h3>
-
-              {/* Categories */}
-              <div className="mb-6">
-                <h4 className="font-medium mb-3">Categories</h4>
-                <div className="space-y-2">
-                  {categories.map((category) => (
-                    <label key={category} className="flex items-center">
-                      <input
-                        type="checkbox"
-                        checked={selectedCategories.includes(category)}
-                        onChange={() => handleCategoryChange(category)}
-                        className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                      />
-                      <span className="ml-2 text-sm text-gray-700">{category}</span>
-                    </label>
-                  ))}
-                </div>
-              </div>
-
               {/* Price Range */}
               <div className="mb-6">
                 <h4 className="font-medium mb-3">Price Range</h4>
-                <div className="space-y-2">
-                  <input
-                    type="range"
-                    min="0"
-                    max="1000"
-                    value={priceRange[1]}
-                    onChange={(e) => setPriceRange([priceRange[0], parseInt(e.target.value)])}
-                    className="w-full"
-                  />
-                  <div className="flex justify-between text-sm text-gray-600">
-                    <span>${priceRange[0]}</span>
-                    <span>${priceRange[1]}</span>
-                  </div>
+                <input
+                  type="range"
+                  min="0"
+                  max="100"
+                  value={priceRange[1]}
+                  onChange={e => setPriceRange([priceRange[0], parseInt(e.target.value)])}
+                  className="w-full"
+                />
+                <div className="flex justify-between text-sm text-gray-600">
+                  <span>${priceRange[0]}</span>
+                  <span>${priceRange[1]}</span>
                 </div>
               </div>
-
-              {/* Clear Filters */}
               <button
                 onClick={() => {
-                  setSelectedCategories([])
-                  setPriceRange([0, 1000])
+                  setPriceRange([0, 100]);
+                  setShowFilter(false);
                 }}
-                className="w-full text-indigo-600 hover:text-indigo-700 text-sm font-medium"
+                className="w-full text-blue-600 hover:text-blue-700 text-sm font-medium"
               >
-                Clear All Filters
+                Clear Filters
               </button>
             </div>
           </div>
+        )}
 
-          {/* Products Grid */}
-          <div className="flex-1">
-            {/* Toolbar */}
-            <div className="bg-white rounded-lg shadow-md p-4 mb-6">
-              <div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
-                <div className="text-sm text-gray-600">
-                  Showing {sortedProducts.length} of {products.length} products
-                </div>
-                
-                <div className="flex items-center space-x-4">
-                  {/* Sort */}
-                  <div className="flex items-center space-x-2">
-                    <SortAsc className="h-4 w-4 text-gray-400" />
-                    <select
-                      value={sortBy}
-                      onChange={(e) => setSortBy(e.target.value)}
-                      className="border border-gray-300 rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                    >
-                      <option value="featured">Featured</option>
-                      <option value="price-low">Price: Low to High</option>
-                      <option value="price-high">Price: High to Low</option>
-                      <option value="rating">Highest Rated</option>
-                      <option value="reviews">Most Reviewed</option>
-                    </select>
-                  </div>
-
-                  {/* View Mode */}
-                  <div className="flex items-center space-x-1">
-                    <button
-                      onClick={() => setViewMode('grid')}
-                      className={`p-2 rounded ${
-                        viewMode === 'grid' ? 'bg-indigo-100 text-indigo-600' : 'text-gray-400 hover:text-gray-600'
-                      }`}
-                    >
-                      <Grid className="h-4 w-4" />
-                    </button>
-                    <button
-                      onClick={() => setViewMode('list')}
-                      className={`p-2 rounded ${
-                        viewMode === 'list' ? 'bg-indigo-100 text-indigo-600' : 'text-gray-400 hover:text-gray-600'
-                      }`}
-                    >
-                      <List className="h-4 w-4" />
-                    </button>
-                  </div>
-                </div>
-              </div>
+        {/* Products Grid/List */}
+        {sortedProducts.length > 0 ? (
+          <>
+            <div
+              className={
+                (viewMode === 'grid'
+                  ? 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6'
+                  : 'space-y-4') +
+                ' transition-all duration-500 ' +
+                (isTransitioning ? 'opacity-0' : 'opacity-100')
+              }
+            >
+              {paginatedProducts.map(product => (
+                <ProductCard key={product.id} product={product} />
+              ))}
             </div>
-
-            {/* Products */}
-            {sortedProducts.length > 0 ? (
-              <div className={
-                viewMode === 'grid'
-                  ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'
-                  : 'space-y-4'
-              }>
-                {sortedProducts.map((product) => (
-                  <ProductCard key={product.id} product={product} />
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-12">
-                <p className="text-gray-500 text-lg">No products found matching your criteria.</p>
-                <button
-                  onClick={() => {
-                    setSelectedCategories([])
-                    setPriceRange([0, 1000])
-                  }}
-                  className="mt-4 text-indigo-600 hover:text-indigo-700 font-medium"
-                >
-                  Clear filters
-                </button>
+            {/* Pagination Bar */}
+            {totalPages > 1 && (
+              <div className="flex justify-center mt-8">
+                <nav className="inline-flex rounded shadow border border-gray-200 overflow-hidden">
+                  <button
+                    onClick={() => goToPage(1)}
+                    disabled={currentPage === 1}
+                    className={`px-4 py-2 text-sm font-medium ${currentPage === 1 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
+                  >
+                    First
+                  </button>
+                  {[...Array(totalPages)].map((_, idx) => (
+                    <button
+                      key={idx + 1}
+                      onClick={() => goToPage(idx + 1)}
+                      className={`px-4 py-2 text-sm font-medium border-l border-gray-200 focus:z-10 ${
+                        currentPage === idx + 1
+                          ? 'bg-blue-500 text-white'
+                          : 'bg-white text-blue-500 hover:bg-blue-50'
+                      }`}
+                    >
+                      {idx + 1}
+                    </button>
+                  ))}
+                  <button
+                    onClick={() => goToPage(currentPage + 1)}
+                    disabled={currentPage === totalPages}
+                    className={`px-4 py-2 text-sm font-medium border-l border-gray-200 ${currentPage === totalPages ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-blue-500 hover:bg-blue-50'}`}
+                  >
+                    Next
+                  </button>
+                </nav>
               </div>
             )}
-          </div>
-        </div>
+          </>
+        ) : (
+          <div className="text-center text-gray-500 py-12">No products found.</div>
+        )}
       </div>
     </div>
   )

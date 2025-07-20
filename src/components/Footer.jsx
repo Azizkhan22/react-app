@@ -8,7 +8,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Company Info */}
           <div className="space-y-4">
-            <h3 className="text-xl font-bold text-indigo-400">ShopHub</h3>
+            <h3 className="text-xl font-bold text-[#23A6F0]">ShopHub</h3>
             <p className="text-gray-300 text-sm">
               Your one-stop destination for quality products. We provide the best shopping experience with fast delivery and excellent customer service.
             </p>
@@ -87,15 +87,15 @@ const Footer = () => {
             <h3 className="text-lg font-semibold">Contact Us</h3>
             <div className="space-y-3">
               <div className="flex items-center space-x-3">
-                <MapPin className="h-5 w-5 text-indigo-400" />
+                <MapPin className="h-5 w-5 text-[#23A6F0]" />
                 <span className="text-gray-300 text-sm">123 Commerce St, City, State 12345</span>
               </div>
               <div className="flex items-center space-x-3">
-                <Phone className="h-5 w-5 text-indigo-400" />
+                <Phone className="h-5 w-5 text-[#23A6F0]" />
                 <span className="text-gray-300 text-sm">+1 (555) 123-4567</span>
               </div>
               <div className="flex items-center space-x-3">
-                <Mail className="h-5 w-5 text-indigo-400" />
+                <Mail className="h-5 w-5 text-[#23A6F0]" />
                 <span className="text-gray-300 text-sm">support@shophub.com</span>
               </div>
             </div>
