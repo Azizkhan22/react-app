@@ -127,6 +127,21 @@ const Products = () => {
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header with title and breadcrumb */}
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-2xl font-bold text-gray-800">Shop</h2>
+          <nav className="text-sm text-gray-500" aria-label="Breadcrumb">
+            <ol className="list-reset flex">
+              <li>
+                <a href="/" className="hover:underline text-blue-600">Home</a>
+              </li>
+              <li>
+                <span className="mx-2">&gt;</span>
+              </li>
+              <li className="text-gray-700 font-medium">Shop</li>
+            </ol>
+          </nav>
+        </div>
         {/* Top Category Images */}
         <div className="flex gap-4 mb-8 overflow-x-auto pb-2">
           {categories.map((cat, idx) => (

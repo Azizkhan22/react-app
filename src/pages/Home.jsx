@@ -170,7 +170,7 @@ const Home = () => {
         {/* Navigation Arrows */}
         <button
           onClick={prevSlide}
-          className="absolute left-4 sm:left-6 md:left-8 top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white p-1 sm:p-2 rounded-full transition-all duration-300 z-10"
+          className="absolute left-4 sm:left-6 md:left-8 top-1/2 cursor-pointer transform -translate-y-1/2 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white p-1 sm:p-2 rounded-full transition-all duration-300 z-10"
         >
           <ArrowLeft className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6" />
         </button>

@@ -110,16 +110,26 @@ const ProductDetail = () => {
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Breadcrumb */}
-        <nav className="mb-8">
-          <ol className="flex items-center space-x-2 text-sm text-gray-600">
-            <li><a href="/" className="hover:text-indigo-600">Home</a></li>
-            <li>/</li>
-            <li><a href="/products" className="hover:text-indigo-600">Products</a></li>
-            <li>/</li>
-            <li className="text-gray-900">{product.name}</li>
-          </ol>
-        </nav>
+        {/* Header with title and breadcrumb */}
+        <div className="flex items-center justify-between mb-6">          
+          <nav className="text-sm text-gray-500" aria-label="Breadcrumb">
+            <ol className="list-reset flex">
+              <li>
+                <a href="/" className="hover:underline text-blue-600">Home</a>
+              </li>
+              <li>
+                <span className="mx-2">&gt;</span>
+              </li>
+              <li>
+                <a href="/products" className="hover:underline text-blue-600">Products</a>
+              </li>
+              <li>
+                <span className="mx-2">&gt;</span>
+              </li>
+              <li className="text-gray-700 font-medium">{product.name}</li>
+            </ol>
+          </nav>
+        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
           {/* Product Images */}
