@@ -164,13 +164,13 @@ const Navbar = () => {
                 </Link>
               ))}
               <div className="flex items-center justify-around space-x-4 pt-4 border-t">
-                <Link to="/wishlist" className="text-gray-700 hover:text-[#23A6F0]">
+                <Link to="/wishlist" className="text-gray-700 hover:text-[#23A6F0]" onClick={() => setIsMenuOpen(false)}>
                   <Heart className="h-6 w-6" />
                 </Link>
-                <Link to="/profile" className="text-gray-700 hover:text-[#23A6F0]">
+                <Link to="/profile" className="text-gray-700 hover:text-[#23A6F0]" onClick={() => setIsMenuOpen(false)}>
                   <User className="h-6 w-6" />
                 </Link>
-                <Link to="/cart" className="text-gray-700 hover:text-[#23A6F0] relative">
+                <Link to="/cart" className="text-gray-700 hover:text-[#23A6F0] relative" onClick={() => setIsMenuOpen(false)}>
                   <ShoppingCart className="h-6 w-6" />
                   {getCartCount() > 0 && (
                     <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">

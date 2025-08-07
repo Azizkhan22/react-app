@@ -1,13 +1,46 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowRight, ArrowLeft, Star, Truck, Shield, RefreshCw, CreditCard } from 'lucide-react'
 import ProductCard from '../components/ProductCard'
 import Button from '../components/Button'
 import heroImage from '../assets/hero.jpg'
+import apiService from '../services/api'
 
 const Home = () => {
   const [currentSlide, setCurrentSlide] = useState(0)
   const [heroTransitioning, setHeroTransitioning] = useState(false)
+  const [featuredProducts, setFeaturedProducts] = useState([])
+  const [categories, setCategories] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true)
+        setError(null)
+        
+        const [featuredData, categoriesData] = await Promise.all([
+          apiService.getFeaturedProducts(),
+          apiService.getCategories()
+        ])
+        
+        // Ensure we have arrays
+        setFeaturedProducts(Array.isArray(featuredData) ? featuredData : [])
+        setCategories(Array.isArray(categoriesData) ? categoriesData : [])
+      } catch (err) {
+        console.error('Error fetching data:', err)
+        setError(err.message)
+        // Set empty arrays as fallback
+        setFeaturedProducts([])
+        setCategories([])
+      } finally {
+        setLoading(false)        
+      }
+    }
+
+    fetchData()    
+  }, [])
 
   const nextSlide = () => {
     setHeroTransitioning(true)
@@ -47,81 +80,34 @@ const Home = () => {
     }
   ]
 
-  // Mock data for featured products
-  const featuredProducts = [
-    {
-      id: 1,
-      name: "Premium Cotton T-Shirt",
-      price: 29.99,
-      originalPrice: 39.99,
-      image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=300&fit=crop",
-      rating: 4,
-      reviews: 128,
-      discount: 25
-    },
-    {
-      id: 2,
-      name: "Designer Denim Jeans",
-      price: 89.99,
-      image: "https://images.unsplash.com/photo-1542272604-787c3835535d?w=400&h=300&fit=crop",
-      rating: 5,
-      reviews: 89
-    },
-    {
-      id: 3,
-      name: "Casual Summer Dress",
-      price: 59.99,
-      originalPrice: 79.99,
-      image: "https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=400&h=300&fit=crop",
-      rating: 4,
-      reviews: 67,
-      discount: 25
-    },
-    {
-      id: 4,
-      name: "Leather Crossbody Bag",
-      price: 49.99,
-      image: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=400&h=300&fit=crop",
-      rating: 4,
-      reviews: 156
-    }
-  ]
-
-  const categories = [
-    { name: "Men's Clothing", image: "https://images.unsplash.com/photo-1617137968427-85924c800a22?w=300&h=200&fit=crop", count: 150 },
-    { name: "Women's Fashion", image: "https://images.unsplash.com/photo-1445205170230-053b83016050?w=300&h=200&fit=crop", count: 200 },
-    { name: "Kids & Baby", image: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=300&h=200&fit=crop", count: 120 },
-    { name: "Accessories", image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=300&h=200&fit=crop", count: 80 }
-  ]
-
   // Admin-featured products carousel data
   const adminCarousel = [
     {
-      season: "SUMMER 2020",
-      title: "Vita Classic Product",
+      season: "SUMMER 2025",
+      title: "Sustainable Men's Clothing",
       description:
-        "We know how large objects will act. We know how are objects will act. We know how are objects will act. We know",
+        "We have a wide range of sustainable men's clothing for you to choose from. We are committed to providing you with the best quality products.",
       price: 16.48,
       image:
-        "https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&w=600&h=800&fit=crop",
+        "https://www.thegoodtrade.com/wp-content/uploads/2024/06/buck-mason-mens-clothing-header.webp",
     },
     {
-      season: "WINTER 2020",
-      title: "Modern Winter Jacket",
+      season: "WINTER 2025",
+      title: "Modern Denim Jackets",
       description:
-        "Stay warm and stylish with our premium winter collection. Limited stock available!",
+        "We have a wide range of modern denim jackets for you to choose from. We are committed to providing you with the best quality products.",
       price: 49.99,
       image:
-        "https://images.pexels.com/photos/1707828/pexels-photo-1707828.jpeg?auto=compress&w=600&h=800&fit=crop",
+        "https://thedenimcompany.pk/cdn/shop/files/DSC04809.jpg?crop=center&height=1512&v=1711974923&width=1080",
     },
     {
-      season: "SPRING 2021",
-      title: "Fresh Spring Look",
+      season: "Summer 2025",
+      title: "Summer footwear",
       description:
-        "Refresh your wardrobe with our new spring arrivals. Bright colors and comfy fits!",
+        "We have a wide range of summer footwear for you to choose from. We are committed to providing you with the best quality products.",
       price: 29.99,
       image:
-        "https://images.pexels.com/photos/1138903/pexels-photo-1138903.jpeg?auto=compress&w=600&h=800&fit=crop",
+        "https://arqs.pk/cdn/shop/articles/women_shoes_for_summer_1024x1024.jpg?v=1622296942",
     },
   ];
   const [adminCurrent, setAdminCurrent] = useState(0);
@@ -141,234 +127,270 @@ const Home = () => {
     }, 300);
   };
 
-  return (
-    <div className="min-h-screen">
-      {/* Hero Section */}
-      <section className="relative p-5 h-64 md:h-80 lg:h-96 overflow-hidden">
-        <div className="relative h-full mx-auto">
-          <img
-            src={heroSlides[currentSlide].image}
-            alt="Hero"
-            className={`w-full h-full object-cover object-center max-h-96 transition-all duration-500 ease-in-out ${heroTransitioning ? 'opacity-0' : 'opacity-100'}`}
-          />
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className={`text-center text-white px-4 sm:px-6 md:px-8 transition-all duration-500 ease-in-out ${heroTransitioning ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'}`}> 
-              <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold mb-3 sm:mb-4 md:mb-6">
-                {heroSlides[currentSlide].title}
-              </h1>
-              <p className="text-sm sm:text-base md:text-lg lg:text-xl mb-4 sm:mb-6 md:mb-8 max-w-md sm:max-w-lg md:max-w-xl mx-auto">
-                {heroSlides[currentSlide].subtitle}
-              </p>
-              <Button size="md" className="text-sm sm:text-base !bg-[#2DC071] px-3 sm:px-6 py-2 sm:py-3">
-                {heroSlides[currentSlide].cta}
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <div className="animate-pulse">
+          <div className="h-96 bg-gray-200"></div>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div className="h-8 bg-gray-200 rounded w-1/4 mb-8"></div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {[...Array(4)].map((_, i) => (
+                <div key={i} className="bg-white rounded-lg shadow-sm p-4">
+                  <div className="h-48 bg-gray-200 rounded mb-4"></div>
+                  <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+                  <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
+      </div>
+    )
+  }
 
-        {/* Navigation Arrows */}
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Error Loading Content</h2>
+            <p className="text-gray-600">{error}</p>
+            <button 
+              onClick={() => window.location.reload()} 
+              className="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+            >
+              Retry
+            </button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Hero Section */}
+      <section className="relative h-96 overflow-hidden">
+        <div className="absolute inset-0">
+          <img
+            src={heroSlides[currentSlide].image}
+            alt="Hero"
+            className={`w-full h-full object-cover transition-opacity duration-300 ${ 
+              heroTransitioning ? 'opacity-0' : 'opacity-100'
+            }`}
+          />          
+        </div>
+        
+        <div className="relative flex items-center justify-center h-full">
+          <div className="text-center text-white px-4">
+            <h1 className={`text-3xl md:text-5xl font-bold mb-4 transition-opacity duration-300 ${
+              heroTransitioning ? 'opacity-0' : 'opacity-100'}`}>
+              {heroSlides[currentSlide].title}
+            </h1>
+            <p className={`text-l md:text-2xl mb-8 max-w-2xl mx-auto transition-opacity duration-300 ${
+              heroTransitioning ? 'opacity-0' : 'opacity-100'}`}>
+              {heroSlides[currentSlide].subtitle}
+            </p>
+            <Link to="/products">
+              <Button size="lg" className="bg-[#2DC071] text-white hover:bg-[#40BB15]">
+                {heroSlides[currentSlide].cta}
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </Link>
+          </div>
+        </div>
+
+        {/* Hero Navigation */}
         <button
           onClick={prevSlide}
-          className="absolute left-4 sm:left-6 md:left-8 top-1/2 cursor-pointer transform -translate-y-1/2 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white p-1 sm:p-2 rounded-full transition-all duration-300 z-10"
+          className="absolute left-4 top-1/2 cursor-pointer transform -translate-y-1/2 bg-white/20 backdrop-blur-sm p-2 rounded-full text-white hover:bg-white/30 transition-colors"
         >
-          <ArrowLeft className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6" />
+          <ArrowLeft className="h-6 w-6" />
         </button>
         <button
           onClick={nextSlide}
-          className="absolute right-4 sm:right-6 md:right-8 top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white p-1 sm:p-2 rounded-full transition-all duration-300 z-10"
+          className="absolute right-4 cursor-pointer top-1/2 transform -translate-y-1/2 bg-white/20 backdrop-blur-sm p-2 rounded-full text-white hover:bg-white/30 transition-colors"
         >
-          <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6" />
+          <ArrowRight className="h-6 w-6" />
         </button>
 
-        {/* Hero Navigation Dots */}
-        <div className="absolute bottom-7 left-1/2 -translate-x-1/2 flex gap-2 z-20">
-          {heroSlides.map((_, idx) => (
+        {/* Hero Indicators */}
+        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+          {heroSlides.map((_, index) => (
             <button
-              key={idx}
-              onClick={() => setCurrentSlide(idx)}
-              className={`w-8 h-1 rounded-full transition-all duration-300 ${
-                idx === currentSlide ? 'bg-white' : 'bg-white/50'
+              key={index}
+              onClick={() => setCurrentSlide(index)}
+              className={`w-3 h-3 rounded-full transition-colors ${
+                currentSlide === index ? 'bg-white' : 'bg-white/50'
               }`}
             />
           ))}
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-8 bg-white">
-        <div className="max-w-screen-lg mx-auto px-2 md:px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-            <div className="text-center">
-              <div className="bg-[#23A6F0]/10 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-2">
-                <Truck className="h-6 w-6 text-[#23A6F0]" />
+      {/* Featured Products */}
+      <section className="py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Featured Products</h2>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              Discover our handpicked selection of premium products that our customers love
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {featuredProducts && featuredProducts.length > 0 ? (
+              featuredProducts.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))
+            ) : (
+              <div className="col-span-full text-center py-12">
+                <p className="text-gray-500">No featured products available</p>
               </div>
-              <h3 className="text-base font-semibold mb-1">Free Shipping</h3>
-              <p className="text-xs text-gray-600">Free shipping on orders over $50</p>
-            </div>
-            <div className="text-center">
-              <div className="bg-[#23A6F0]/10 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-2">
-                <Shield className="h-6 w-6 text-[#23A6F0]" />
-              </div>
-              <h3 className="text-base font-semibold mb-1">Secure Payment</h3>
-              <p className="text-xs text-gray-600">100% secure payment processing</p>
-            </div>
-            <div className="text-center">
-              <div className="bg-[#23A6F0]/10 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-2">
-                <RefreshCw className="h-6 w-6 text-[#23A6F0]" />
-              </div>
-              <h3 className="text-base font-semibold mb-1">Easy Returns</h3>
-              <p className="text-xs text-gray-600">30-day return policy</p>
-            </div>
-            <div className="text-center">
-              <div className="bg-[#23A6F0]/10 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-2">
-                <CreditCard className="h-6 w-6 text-[#23A6F0]" />
-              </div>
-              <h3 className="text-base font-semibold mb-1">Flexible Payment</h3>
-              <p className="text-xs text-gray-600">Multiple payment options available</p>
-            </div>
+            )}
+          </div>
+          
+          <div className="text-center mt-12">
+            <Link to="/products">
+              <Button variant="outline" size="lg">
+                View All Products
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
 
       {/* Categories Section */}
-      <section className="py-8 bg-gray-50">
-        <div className="max-w-screen-lg mx-auto px-2 md:px-4">
-          <div className="text-center mb-6">
-            <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-2">Shop by Category</h2>
-            <p className="text-sm text-gray-600 max-w-xl mx-auto">
-              Explore our wide range of fashion and clothing categories
+      <section className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Shop by Category</h2>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              Explore our wide range of categories to find exactly what you're looking for
             </p>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-            {categories.map((category, index) => (
-              <Link
-                key={index}
-                to="/products"
-                className="group block bg-white rounded-lg overflow-hidden shadow hover:shadow-md transition-shadow"
-              >
-                <div className="relative">
-                  <img
-                    src={category.image}
-                    alt={category.name}
-                    className="w-full h-28 md:h-32 object-cover group-hover:scale-105 transition-transform duration-300 rounded-t-lg"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent rounded-t-lg"></div>
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="text-center text-white">
-                      <h3 className="text-base font-bold mb-1 drop-shadow-lg">{category.name}</h3>
-                      <p className="text-xs opacity-90 drop-shadow-md">{category.count} Products</p>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {categories && categories.length > 0 ? (
+              categories.map((category) => (
+                <Link
+                  key={category.id}
+                  to={`/products?category=${encodeURIComponent(category.name)}`}
+                  className="group block"
+                >
+                  <div className="relative overflow-hidden rounded-lg shadow-md hover:shadow-lg transition-shadow">
+                    <img
+                      src={category.image}
+                      alt={category.name}
+                      className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                    <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors"></div>
+                    <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
+                      <h3 className="text-xl font-bold mb-2">{category.name}</h3>
+                      <p className="text-sm opacity-90">{category.count} items</p>
                     </div>
                   </div>
-                </div>
-              </Link>
-            ))}
+                </Link>
+              ))
+            ) : (
+              <div className="col-span-full text-center py-12">
+                <p className="text-gray-500">No categories available</p>
+              </div>
+            )}
           </div>
         </div>
       </section>
 
-      {/* Featured Products Section */}
-      <section className="py-8 bg-white">
-        <div className="max-w-screen-lg mx-auto px-2 md:px-4">
-          <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-6 gap-2">
-            <div>
-              <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-1">Featured Fashion</h2>
-              <p className="text-sm text-gray-600">Handpicked clothing and accessories for you</p>
+      {/* Admin Featured Carousel */}
+      <section className="py-16 bg-[#23856D]">
+        <div className="max-w-7xl mx-auto">
+          
+          <div className="relative">
+            <div className="overflow-hidden rounded-lg">
+              <div
+                className="flex transition-transform duration-300 ease-in-out"
+                style={{ transform: `translateX(-${adminCurrent * 100}%)` }}
+              >
+                {adminCarousel.map((item, index) => (
+                  <div key={index} className="w-full flex-shrink-0">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                      <div className="text-center lg:text-left sm:pl-22">
+                        <p className="text-[12px] md:text-sm font-medium text-white mb-2">{item.season}</p>
+                        <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">{item.title}</h3>
+                        <p className="text-white text-[12px] md:text-sm mb-6 max-w-md mx-auto lg:mx-0">{item.description}</p>
+                        <div className="flex items-center justify-center lg:justify-start space-x-4 mb-6">
+                          <span className="text-2xl font-bold text-white">${item.price}</span>
+                          <Link to="/products">
+                            <Button size="lg" className="ml-10 hover:bg-[#40BB15]">Shop Now</Button>
+                          </Link>
+                        </div>
+                      </div>
+                      <div className="flex justify-center">
+                        <img
+                          src={item.image}
+                          alt={item.title}
+                          className="w-full max-w-md rounded-lg shadow-lg object-cover"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
-            <Link
-              to="/products"
-              className="text-[#23A6F0] hover:text-[#1e8fd8] font-medium flex items-center text-sm"
-            >
-              View All
-              <ArrowRight className="ml-1 h-4 w-4" />
-            </Link>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-            {featuredProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
-        </div>
-      </section>  
-
-      {/* Admin Carousel Section */}
-      <section className="w-full bg-[#219653] relative flex flex-col md:flex-row items-center justify-around min-h-[350px] md:min-h-[400px] lg:min-h-[440px] overflow-hidden mb-8 px-4 py-6 md:px-0">
-        {/* Left: Info */}
-        <div className={`flex flex-col justify-center items-center md:items-end md:pr-8 lg:pr-16 z-10 max-w-xl md:max-w-lg lg:max-w-xl text-center md:text-right transition-all duration-500 ease-in-out ${adminTransitioning ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'}`}> 
-          <span className="text-white text-xs md:text-sm mb-2 tracking-widest uppercase opacity-80">
-            {adminCarousel[adminCurrent].season}
-          </span>
-          <h2 className="text-white text-2xl md:text-4xl font-bold mb-2 md:mb-4 leading-tight">
-            {adminCarousel[adminCurrent].title}
-          </h2>
-          <p className="text-white text-sm md:text-base mb-4 max-w-md opacity-90">
-            {adminCarousel[adminCurrent].description}
-          </p>
-          <div className="flex flex-col md:flex-row items-center md:items-end justify-center md:justify-end gap-2 md:gap-4 mb-4">
-            <span className="text-white text-lg md:text-xl font-bold">
-              ${adminCarousel[adminCurrent].price.toFixed(2)}
-            </span>
-            <Button size="md" className="!bg-[#2DC071] px-4 py-2 text-white font-semibold mt-2 md:mt-0">
-              ADD TO CART
-            </Button>
-          </div>
-        </div>
-        {/* Right: Image */}
-        <div className={`flex items-center justify-center md:justify-start h-full relative z-10 mt-6 md:mt-0 transition-all duration-500 ease-in-out ${adminTransitioning ? 'opacity-0' : 'opacity-100'}`}> 
-          <img
-            src={adminCarousel[adminCurrent].image}
-            alt={adminCarousel[adminCurrent].title}
-            className="object-contain h-[220px] xs:h-[260px] sm:h-[300px] md:h-[340px] lg:h-[400px] w-auto drop-shadow-xl select-none pointer-events-none"
-            draggable="false"
-          />
-        </div>
-        {/* Arrows */}
-        <button
-          onClick={prevAdmin}
-          className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 text-white p-2 rounded-full z-20"
-        >
-          <ArrowLeft className="h-6 w-6" />
-        </button>
-        <button
-          onClick={nextAdmin}
-          className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 text-white p-2 rounded-full z-20"
-        >
-          <ArrowRight className="h-6 w-6" />
-        </button>
-        {/* Dots */}
-        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 z-20">
-          {adminCarousel.map((_, idx) => (
+            
             <button
-              key={idx}
-              onClick={() => setAdminCurrent(idx)}
-              className={`w-8 h-1 rounded-full transition-all duration-300 ${
-                idx === adminCurrent ? 'bg-white' : 'bg-white/50'
-              }`}
-            />
-          ))}
+              onClick={prevAdmin}
+              className="absolute left-1   top-1/2 transform -translate-y-1/2 bg-white/80 backdrop-blur-sm p-3 rounded-full shadow-lg hover:bg-white transition-colors"
+            >
+              <ArrowLeft className="h-6 w-6 text-gray-700" />
+            </button>
+            <button
+              onClick={nextAdmin}
+              className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/80 backdrop-blur-sm p-3 rounded-full shadow-lg hover:bg-white transition-colors"
+            >
+              <ArrowRight className="h-6 w-6 text-gray-700" />
+            </button>
+          </div>
         </div>
-        {/* BG overlay for image fade */}
-        <div className="absolute inset-0 bg-[#219653] opacity-90 pointer-events-none" />
       </section>
 
-      {/* Newsletter Section */}
-      <section className="py-8 bg-[#FAFAFA]">
-        <div className="max-w-screen-md mx-auto px-2 md:px-4 text-center bg-gray-100 rounded-lg p-6">
-          <h2 className="text-xl md:text-2xl font-bold text-black mb-2">
-            Stay Updated
-          </h2>
-          <p className="text-black/90 mb-4 text-base">
-            Subscribe to our newsletter for the latest products and exclusive offers
-          </p>
-          <div className="flex flex-col sm:flex-row gap-2 max-w-md mx-auto">
-            <input
-              type="email"
-              placeholder="Enter your email"
-              className="flex-1 px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-white text-sm"
-            />
-            <Button variant="secondary" size="md" className="px-4 py-2">
-              Subscribe
-            </Button>
+      {/* Features Section */}
+      <section className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="text-center">
+              <div className="bg-indigo-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Truck className="h-8 w-8 text-indigo-600" />
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Free Shipping</h3>
+              <p className="text-gray-600">Free shipping on orders over $50</p>
+            </div>
+            
+            <div className="text-center">
+              <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Shield className="h-8 w-8 text-green-600" />
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Secure Payment</h3>
+              <p className="text-gray-600">100% secure payment processing</p>
+            </div>
+            
+            <div className="text-center">
+              <div className="bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <RefreshCw className="h-8 w-8 text-purple-600" />
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Easy Returns</h3>
+              <p className="text-gray-600">30-day return policy</p>
+            </div>
+            
+            <div className="text-center">
+              <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <CreditCard className="h-8 w-8 text-blue-600" />
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Multiple Payment</h3>
+              <p className="text-gray-600">Credit card, PayPal, and more</p>
+            </div>
           </div>
         </div>
       </section>

@@ -22,7 +22,7 @@ const ProductCard = ({ product }) => {
       <Link to={`/product/${product.id}`} className="block flex-1">
         <div className="relative overflow-hidden">
           <img
-            src={product.image}
+            src={product.images[0]}
             alt={product.name}
             className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
           />

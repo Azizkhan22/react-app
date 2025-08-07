@@ -1,81 +1,120 @@
-# ShopHub - E-commerce React App
+# E-commerce React + Django Full-Stack Application
 
-A modern, responsive e-commerce application built with React, Vite, and Tailwind CSS. This project follows the design patterns from the Figma E-commerce UI Kit and provides a complete shopping experience.
+A modern e-commerce application built with React frontend and Django REST API backend.
 
 ## 🚀 Features
 
-- **Modern UI/UX**: Clean, responsive design with smooth animations
-- **Product Catalog**: Browse products with filtering and sorting
+### Frontend (React)
+- **Modern UI/UX**: Beautiful, responsive design with Tailwind CSS
+- **Product Catalog**: Browse products with filtering, sorting, and search
+- **Product Details**: Detailed product pages with images, reviews, and related products
 - **Shopping Cart**: Add, remove, and manage cart items
-- **User Authentication**: Login and registration system
-- **Checkout Process**: Multi-step checkout with shipping and payment
-- **User Profile**: Manage account settings, orders, and preferences
-- **Responsive Design**: Optimized for mobile and desktop
-- **Search Functionality**: Find products quickly
-- **Wishlist**: Save favorite items for later
+- **User Authentication**: Login, register, and profile management
+- **Responsive Design**: Works perfectly on desktop, tablet, and mobile
 
-## 🛠️ Tech Stack
-
-- **Frontend**: React 18
-- **Build Tool**: Vite
-- **Styling**: Tailwind CSS
-- **Icons**: Lucide React
-- **Routing**: React Router DOM
-- **State Management**: React Context API
+### Backend (Django)
+- **RESTful API**: Complete REST API with Django REST Framework
+- **Product Management**: CRUD operations for products, categories, and reviews
+- **User Management**: Authentication and user profiles
+- **Shopping Cart**: Server-side cart management
+- **Order Management**: Order creation and tracking
+- **Database**: PostgreSQL-ready with SQLite for development
 
 ## 📁 Project Structure
 
 ```
-src/
-├── components/          # Reusable UI components
-│   ├── Button.jsx      # Custom button component
-│   ├── Footer.jsx      # Site footer
-│   ├── Navbar.jsx      # Navigation header
-│   └── ProductCard.jsx # Product display card
-├── context/            # React Context providers
-│   └── CartContext.jsx # Shopping cart state management
-├── pages/              # Page components
-│   ├── Cart.jsx        # Shopping cart page
-│   ├── Checkout.jsx    # Checkout process
-│   ├── Home.jsx        # Landing page
-│   ├── Login.jsx       # User login
-│   ├── ProductDetail.jsx # Individual product page
-│   ├── Products.jsx    # Product catalog
-│   ├── Profile.jsx     # User profile
-│   └── Register.jsx    # User registration
-├── assets/             # Static assets
-├── utils/              # Utility functions
-├── App.jsx             # Main app component
-├── index.css           # Global styles with Tailwind
-└── main.jsx           # App entry point
+react-app/
+├── src/                    # React frontend source
+│   ├── components/         # Reusable UI components
+│   ├── pages/             # Page components
+│   ├── context/           # React context providers
+│   ├── services/          # API service layer
+│   ├── hooks/             # Custom React hooks
+│   └── assets/            # Static assets
+├── ecommerce_backend/      # Django backend
+│   ├── api/               # Django app with models, views, serializers
+│   ├── ecommerce_backend/ # Django project settings
+│   └── requirements.txt   # Python dependencies
+└── README.md              # This file
 ```
+
+## 🛠️ Technology Stack
+
+### Frontend
+- **React 19** - Modern React with hooks
+- **React Router** - Client-side routing
+- **Tailwind CSS** - Utility-first CSS framework
+- **Lucide React** - Beautiful icons
+- **Vite** - Fast build tool
+
+### Backend
+- **Django 5.2** - Python web framework
+- **Django REST Framework** - REST API framework
+- **Django CORS Headers** - Cross-origin resource sharing
+- **SQLite** - Database (can be easily switched to PostgreSQL)
 
 ## 🚀 Getting Started
 
 ### Prerequisites
-
 - Node.js (version 16 or higher)
+- Python 3.8 or higher
 - npm or yarn
 
-### Installation
+### Backend Setup
 
-1. Clone the repository:
-```bash
-git clone <repository-url>
-cd react-app
-```
+1. **Navigate to Django backend directory:**
+   ```bash
+   cd ecommerce_backend
+   ```
 
-2. Install dependencies:
-```bash
-npm install
-```
+2. **Create and activate virtual environment:**
+   ```bash
+   python -m venv django_env
+   django_env\Scripts\activate  # Windows
+   source django_env/bin/activate  # Linux/Mac
+   ```
 
-3. Start the development server:
-```bash
-npm run dev
-```
+3. **Install Python dependencies:**
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-4. Open your browser and navigate to `http://localhost:5173`
+4. **Run database migrations:**
+   ```bash
+   python manage.py makemigrations
+   python manage.py migrate
+   ```
+
+5. **Populate database with sample data:**
+   ```bash
+   python manage.py populate_data
+   ```
+
+6. **Start Django development server:**
+   ```bash
+   python manage.py runserver
+   ```
+
+The Django API will be available at `http://localhost:8000/api/`
+
+### Frontend Setup
+
+1. **Navigate to React app directory:**
+   ```bash
+   cd react-app
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+3. **Start development server:**
+   ```bash
+   npm run dev
+   ```
+
+The React app will be available at `http://localhost:5173`
 
 ## 📱 Pages Overview
 
@@ -90,6 +129,7 @@ npm run dev
 - Category and price filters
 - Sorting functionality
 - Grid/list view toggle
+- Search functionality
 
 ### Product Detail (`/product/:id`)
 - Product images with gallery
@@ -104,24 +144,56 @@ npm run dev
 - Order summary
 - Promo code application
 
-### Checkout (`/checkout`)
-- Multi-step checkout process
-- Shipping information
-- Payment details
-- Order review
-
 ### User Authentication
-- **Login** (`/login`): User sign-in with social options
+- **Login** (`/login`): User sign-in
 - **Register** (`/register`): New user registration
+- **Profile** (`/profile`): User profile management
 
-### User Profile (`/profile`)
-- Personal information management
-- Order history
-- Wishlist
-- Address management
-- Payment methods
-- Notification preferences
-- Account settings
+## 🔌 API Endpoints
+
+### Products
+- `GET /api/products/` - List all products
+- `GET /api/products/{id}/` - Get product details
+- `GET /api/products/featured/` - Get featured products
+- `GET /api/products/related/?product_id={id}` - Get related products
+- `POST /api/products/{id}/add_review/` - Add product review
+
+### Categories
+- `GET /api/categories/` - List all categories
+- `GET /api/categories/{id}/` - Get category details
+- `GET /api/categories/{id}/products/` - Get products in category
+
+### Cart (Authenticated)
+- `GET /api/cart/` - Get user's cart
+- `POST /api/cart/` - Add item to cart
+- `PUT /api/cart/{id}/` - Update cart item
+- `DELETE /api/cart/{id}/` - Remove item from cart
+- `GET /api/cart/total/` - Get cart total and count
+
+### Wishlist (Authenticated)
+- `GET /api/wishlist/` - Get user's wishlist
+- `POST /api/wishlist/` - Add item to wishlist
+- `DELETE /api/wishlist/{id}/` - Remove item from wishlist
+- `POST /api/wishlist/toggle/` - Toggle wishlist item
+
+### Orders (Authenticated)
+- `GET /api/orders/` - Get user's orders
+- `POST /api/orders/` - Create new order
+- `POST /api/orders/create_from_cart/` - Create order from cart
+
+### User Profile (Authenticated)
+- `GET /api/profile/` - Get user profile
+- `PUT /api/profile/` - Update user profile
+
+## 🗄️ Database Models
+
+- **Category**: Product categories with name, image, and count
+- **Product**: Products with details, pricing, images, and features
+- **Review**: Product reviews with ratings and comments
+- **Cart**: Shopping cart items for users
+- **Wishlist**: User wishlist items
+- **Order**: User orders with status tracking
+- **OrderItem**: Individual items in orders
 
 ## 🎨 Design System
 
@@ -136,36 +208,33 @@ The app uses a consistent design system with:
 ## 🔧 Customization
 
 ### Adding New Products
-
-Update the mock data in the respective components or integrate with a backend API.
+Use the Django admin interface or add products through the API endpoints.
 
 ### Styling Changes
+Modify Tailwind classes in the React components or update the Tailwind configuration.
 
-Modify Tailwind classes or extend the configuration in `tailwind.config.js`.
+### API Modifications
+Add new endpoints in the Django views and update the React API service accordingly.
 
-### Adding New Pages
+## 🚀 Deployment
 
-1. Create a new component in the `pages/` directory
-2. Add the route in `App.jsx`
-3. Update navigation if needed
+### Backend Deployment
+1. Set up a production database (PostgreSQL recommended)
+2. Configure environment variables
+3. Run migrations
+4. Deploy to your preferred hosting service (Heroku, DigitalOcean, AWS, etc.)
 
-## 📦 Build for Production
+### Frontend Deployment
+1. Build the production version: `npm run build`
+2. Deploy the `dist` folder to your hosting service (Vercel, Netlify, etc.)
 
-```bash
-npm run build
-```
+## 📝 Sample Data
 
-The built files will be in the `dist/` directory.
-
-## 🧪 Testing
-
-```bash
-npm run test
-```
-
-## 📄 License
-
-This project is licensed under the MIT License.
+The application comes with sample data including:
+- 4 categories (Men's Clothing, Women's Fashion, Electronics, Home & Garden)
+- 7 sample products with images, descriptions, and features
+- 1 test user (username: testuser, password: testpass123)
+- Sample reviews for products
 
 ## 🤝 Contributing
 
@@ -175,10 +244,10 @@ This project is licensed under the MIT License.
 4. Test thoroughly
 5. Submit a pull request
 
-## 📞 Support
+## 📄 License
 
-For support or questions, please open an issue in the repository.
+This project is open source and available under the [MIT License](LICENSE).
 
----
+## 🆘 Support
 
-**Note**: This is a frontend-only implementation. For a production application, you would need to integrate with a backend API for data persistence, user authentication, and payment processing.
+If you encounter any issues or have questions, please open an issue on GitHub or contact the development team.
