@@ -1,16 +1,27 @@
 const API_BASE_URL = 'http://localhost:8000/api';
 
+
+function getCookie(name) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(';').shift();
+}
+
 class ApiService {
   constructor() {
     this.baseURL = API_BASE_URL;
   }
 
-  // Generic request method
+  // Generic request method with credentials
   async request(endpoint, options = {}) {
     const url = `${this.baseURL}${endpoint}`;
+    const csrfToken = getCookie('csrftoken');
     const config = {
+      credentials: 'include', // Include cookies for session management
       headers: {
         'Content-Type': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest', // Helps with CSRF
+        ...(csrfToken ? { 'X-CSRFToken': csrfToken } : {}),
         ...options.headers,
       },
       ...options,
@@ -20,7 +31,8 @@ class ApiService {
       const response = await fetch(url, config);
       
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || errorData.message || `HTTP error! status: ${response.status}`);
       }
       
       return await response.json();
@@ -36,6 +48,31 @@ class ApiService {
     // Otherwise, return the data as is (for single items or non-paginated lists)
     return data && data.results ? data.results : data;
   }
+  
+  // Authentication methods
+  async login(credentials) {
+    return this.request('/auth/login/', {
+      method: 'POST',
+      body: JSON.stringify(credentials),
+    });
+  }
+
+  async logout() {
+    return this.request('/auth/logout/', {
+      method: 'POST',
+    });
+  }
+
+  async register(userData) {
+    return this.request('/auth/register/', {
+      method: 'POST',
+      body: JSON.stringify(userData),
+    });
+  }
+
+  async checkAuth() {
+    return this.request('/auth/check/');
+  }
 
   // Products
   async getProducts(params = {}) {
@@ -50,7 +87,6 @@ class ApiService {
 
   async getFeaturedProducts() {
     const data = await this.request('/products/featured/');
-    console.log(data)
     return this.extractResults(data);
   }
 
@@ -169,29 +205,6 @@ class ApiService {
     return this.request('/profile/', {
       method: 'PUT',
       body: JSON.stringify(profileData),
-    });
-  }
-
-  // Authentication helpers
-  async login(credentials) {
-    // This would typically use Django's authentication endpoints
-    // For now, we'll use session-based auth
-    return this.request('/auth/login/', {
-      method: 'POST',
-      body: JSON.stringify(credentials),
-    });
-  }
-
-  async logout() {
-    return this.request('/auth/logout/', {
-      method: 'POST',
-    });
-  }
-
-  async register(userData) {
-    return this.request('/auth/register/', {
-      method: 'POST',
-      body: JSON.stringify(userData),
     });
   }
 }

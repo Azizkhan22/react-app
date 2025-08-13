@@ -2,20 +2,32 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Trash2, Minus, Plus, ArrowLeft, ShoppingBag } from 'lucide-react'
 import { useCart } from '../context/CartContext'
+import { useAuth } from '../context/AuthContext'
 import Button from '../components/Button'
 
 const Cart = () => {
-  const { items, removeFromCart, updateQuantity, getCartTotal, clearCart } = useCart()
+  const { items, removeFromCart, updateQuantity, getCartTotal, clearCart, isAuthenticated } = useCart()
+  const { user } = useAuth()
   const [isUpdating, setIsUpdating] = useState(false)
 
-  const handleQuantityChange = (productId, newQuantity) => {
+  const handleQuantityChange = async (cartItemId, newQuantity) => {
     if (newQuantity >= 1 && newQuantity <= 10) {
-      updateQuantity(productId, newQuantity)
+      setIsUpdating(true)
+      try {
+        await updateQuantity(cartItemId, newQuantity)
+      } finally {
+        setIsUpdating(false)
+      }
     }
   }
 
-  const handleRemoveItem = (productId) => {
-    removeFromCart(productId)
+  const handleRemoveItem = async (cartItemId) => {
+    setIsUpdating(true)
+    try {
+      await removeFromCart(cartItemId)
+    } finally {
+      setIsUpdating(false)
+    }
   }
 
   const shippingCost = getCartTotal() > 50 ? 0 : 5.99
@@ -48,43 +60,55 @@ const Cart = () => {
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Shopping Cart</h1>
-          <p className="text-gray-600">{items.length} items in your cart</p>
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">Shopping Cart</h1>
+            <p className="mt-2 text-gray-600">
+              {isAuthenticated ? `Welcome back, ${user?.first_name || user?.username}!` : 'Please log in to save your cart'}
+            </p>
+          </div>
+          <Link to="/products">
+            <Button variant="outline">
+              Continue Shopping
+              <ArrowLeft className="ml-2 h-5 w-5 rotate-180" />
+            </Button>
+          </Link>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Cart Items */}
           <div className="lg:col-span-2">
-            <div className="bg-white rounded-lg shadow-md overflow-hidden">
+            <div className="bg-white rounded-lg shadow-md">
               <div className="p-6 border-b border-gray-200">
-                <h2 className="text-lg font-semibold">Cart Items</h2>
+                <h2 className="text-lg font-semibold text-gray-900">
+                  Cart Items ({items.length})
+                </h2>
               </div>
-              
+
               <div className="divide-y divide-gray-200">
                 {items.map((item) => (
                   <div key={item.id} className="p-6">
                     <div className="flex items-center space-x-4">
                       <img
-                        src={item.image}
-                        alt={item.name}
+                        src={item.product?.images?.[0] || '/placeholder-image.jpg'}
+                        alt={item.product?.name || 'Product'}
                         className="w-20 h-20 object-cover rounded-lg"
                       />
                       
                       <div className="flex-1 min-w-0">
                         <h3 className="text-lg font-medium text-gray-900 truncate">
-                          {item.name}
+                          {item.product?.name || 'Product Name'}
                         </h3>
                         <p className="text-sm text-gray-500">
-                          {item.category}
+                          {item.product?.category?.name || 'Category'}
                         </p>
                         <div className="flex items-center space-x-4 mt-2">
                           <span className="text-lg font-semibold text-gray-900">
-                            ${item.price}
+                            ${item.product?.price || 0}
                           </span>
-                          {item.originalPrice && (
+                          {item.product?.original_price && (
                             <span className="text-sm text-gray-500 line-through">
-                              ${item.originalPrice}
+                              ${item.product.original_price}
                             </span>
                           )}
                         </div>
@@ -93,7 +117,7 @@ const Cart = () => {
                       <div className="flex items-center space-x-2">
                         <button
                           onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
-                          disabled={item.quantity <= 1}
+                          disabled={item.quantity <= 1 || isUpdating}
                           className="p-1 rounded hover:bg-gray-100 disabled:opacity-50"
                         >
                           <Minus className="h-4 w-4" />
@@ -101,7 +125,7 @@ const Cart = () => {
                         <span className="w-12 text-center font-medium">{item.quantity}</span>
                         <button
                           onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
-                          disabled={item.quantity >= 10}
+                          disabled={item.quantity >= 10 || isUpdating}
                           className="p-1 rounded hover:bg-gray-100 disabled:opacity-50"
                         >
                           <Plus className="h-4 w-4" />
@@ -110,10 +134,11 @@ const Cart = () => {
 
                       <div className="text-right">
                         <div className="text-lg font-semibold text-gray-900">
-                          ${(item.price * item.quantity).toFixed(2)}
+                          ${((item.product?.price || 0) * item.quantity).toFixed(2)}
                         </div>
                         <button
                           onClick={() => handleRemoveItem(item.id)}
+                          disabled={isUpdating}
                           className="text-red-600 hover:text-red-800 text-sm font-medium mt-1"
                         >
                           Remove
@@ -127,6 +152,7 @@ const Cart = () => {
               <div className="p-6 border-t border-gray-200">
                 <button
                   onClick={clearCart}
+                  disabled={isUpdating}
                   className="text-red-600 hover:text-red-800 text-sm font-medium"
                 >
                   Clear Cart
@@ -138,16 +164,16 @@ const Cart = () => {
           {/* Order Summary */}
           <div className="lg:col-span-1">
             <div className="bg-white rounded-lg shadow-md p-6 sticky top-8">
-              <h2 className="text-lg font-semibold mb-4">Order Summary</h2>
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">Order Summary</h2>
               
-              <div className="space-y-3 mb-6">
+              <div className="space-y-3">
                 <div className="flex justify-between text-sm">
-                  <span>Subtotal ({items.length} items)</span>
+                  <span>Subtotal</span>
                   <span>${getCartTotal().toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span>Shipping</span>
-                  <span>{shippingCost === 0 ? 'Free' : `$${shippingCost.toFixed(2)}`}</span>
+                  <span>{shippingCost === 0 ? 'Free' : `$${shippingCost}`}</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span>Tax</span>
@@ -161,15 +187,10 @@ const Cart = () => {
                 </div>
               </div>
 
-              <div className="space-y-3">
+              <div className="mt-6">
                 <Link to="/checkout">
-                  <Button size="lg" className="w-full">
+                  <Button size="lg" className="w-full" disabled={isUpdating}>
                     Proceed to Checkout
-                  </Button>
-                </Link>
-                <Link to="/products">
-                  <Button variant="outline" size="lg" className="w-full">
-                    Continue Shopping
                   </Button>
                 </Link>
               </div>

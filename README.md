@@ -1,253 +1,321 @@
-# E-commerce React + Django Full-Stack Application
+# ShopHub - Full-Stack E-Commerce Application
 
-A modern e-commerce application built with React frontend and Django REST API backend.
+A modern e-commerce platform built with React frontend and Django backend, featuring complete session management, user authentication, and persistent shopping cart functionality.
 
 ## 🚀 Features
 
-### Frontend (React)
-- **Modern UI/UX**: Beautiful, responsive design with Tailwind CSS
-- **Product Catalog**: Browse products with filtering, sorting, and search
-- **Product Details**: Detailed product pages with images, reviews, and related products
-- **Shopping Cart**: Add, remove, and manage cart items
-- **User Authentication**: Login, register, and profile management
-- **Responsive Design**: Works perfectly on desktop, tablet, and mobile
+### Frontend (React + Vite)
+- **Modern UI/UX** with Tailwind CSS
+- **Responsive Design** for all devices
+- **User Authentication** with session management
+- **Persistent Shopping Cart** (guest & authenticated users)
+- **Product Catalog** with filtering and search
+- **User Profile Management**
+- **Order Management**
+- **Wishlist Functionality**
 
-### Backend (Django)
-- **RESTful API**: Complete REST API with Django REST Framework
-- **Product Management**: CRUD operations for products, categories, and reviews
-- **User Management**: Authentication and user profiles
-- **Shopping Cart**: Server-side cart management
-- **Order Management**: Order creation and tracking
-- **Database**: PostgreSQL-ready with SQLite for development
+### Backend (Django + DRF)
+- **RESTful API** with Django REST Framework
+- **Session-based Authentication**
+- **Database Models** for products, users, orders, cart
+- **Admin Interface** for content management
+- **CORS Support** for cross-origin requests
+- **Pagination** for large datasets
+
+### Session Management
+- **User Authentication** with login/register/logout
+- **Session Persistence** across browser sessions
+- **Cart Synchronization** between guest and authenticated users
+- **Profile Management** with editable user information
+- **Secure Password Handling**
+
+## 🛠️ Tech Stack
+
+### Frontend
+- **React 18** - UI Library
+- **Vite** - Build Tool
+- **React Router DOM** - Client-side routing
+- **Tailwind CSS** - Utility-first CSS framework
+- **Lucide React** - Icon library
+- **Context API** - State management
+
+### Backend
+- **Django 5.2.5** - Web framework
+- **Django REST Framework 3.16.0** - API framework
+- **Django CORS Headers 4.7.0** - CORS support
+- **SQLite** - Database (can be changed to PostgreSQL/MySQL)
 
 ## 📁 Project Structure
 
 ```
 react-app/
-├── src/                    # React frontend source
-│   ├── components/         # Reusable UI components
-│   ├── pages/             # Page components
-│   ├── context/           # React context providers
-│   ├── services/          # API service layer
-│   ├── hooks/             # Custom React hooks
-│   └── assets/            # Static assets
-├── ecommerce_backend/      # Django backend
-│   ├── api/               # Django app with models, views, serializers
-│   ├── ecommerce_backend/ # Django project settings
-│   └── requirements.txt   # Python dependencies
-└── README.md              # This file
+├── ecommerce_backend/          # Django backend
+│   ├── ecommerce_backend/      # Django project settings
+│   ├── api/                    # Django app
+│   │   ├── models.py          # Database models
+│   │   ├── serializers.py     # DRF serializers
+│   │   ├── views.py           # API views
+│   │   ├── urls.py            # API URLs
+│   │   └── admin.py           # Admin interface
+│   ├── manage.py
+│   └── requirements.txt
+├── src/                        # React frontend
+│   ├── components/            # Reusable components
+│   ├── context/               # React Context providers
+│   │   ├── AuthContext.jsx    # Authentication state
+│   │   └── CartContext.jsx    # Cart state management
+│   ├── pages/                 # Page components
+│   ├── services/              # API service layer
+│   └── hooks/                 # Custom React hooks
+├── package.json
+└── README.md
 ```
-
-## 🛠️ Technology Stack
-
-### Frontend
-- **React 19** - Modern React with hooks
-- **React Router** - Client-side routing
-- **Tailwind CSS** - Utility-first CSS framework
-- **Lucide React** - Beautiful icons
-- **Vite** - Fast build tool
-
-### Backend
-- **Django 5.2** - Python web framework
-- **Django REST Framework** - REST API framework
-- **Django CORS Headers** - Cross-origin resource sharing
-- **SQLite** - Database (can be easily switched to PostgreSQL)
 
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Node.js (version 16 or higher)
-- Python 3.8 or higher
-- npm or yarn
+- Node.js (v16 or higher)
+- Python (v3.8 or higher)
+- pip (Python package manager)
 
 ### Backend Setup
 
-1. **Navigate to Django backend directory:**
+1. **Navigate to backend directory:**
    ```bash
    cd ecommerce_backend
    ```
 
-2. **Create and activate virtual environment:**
+2. **Create virtual environment:**
    ```bash
    python -m venv django_env
-   django_env\Scripts\activate  # Windows
-   source django_env/bin/activate  # Linux/Mac
    ```
 
-3. **Install Python dependencies:**
+3. **Activate virtual environment:**
+   ```bash
+   # Windows
+   django_env\Scripts\activate
+   
+   # macOS/Linux
+   source django_env/bin/activate
+   ```
+
+4. **Install dependencies:**
    ```bash
    pip install -r requirements.txt
    ```
 
-4. **Run database migrations:**
+5. **Run migrations:**
    ```bash
-   python manage.py makemigrations
    python manage.py migrate
    ```
 
-5. **Populate database with sample data:**
+6. **Create superuser:**
+   ```bash
+   python manage.py createsuperuser
+   ```
+
+7. **Populate database with sample data:**
    ```bash
    python manage.py populate_data
    ```
 
-6. **Start Django development server:**
+8. **Start Django server:**
    ```bash
    python manage.py runserver
    ```
 
-The Django API will be available at `http://localhost:8000/api/`
+   The Django backend will be available at `http://localhost:8000`
 
 ### Frontend Setup
 
-1. **Navigate to React app directory:**
-   ```bash
-   cd react-app
-   ```
-
-2. **Install dependencies:**
+1. **Install dependencies:**
    ```bash
    npm install
    ```
 
-3. **Start development server:**
+2. **Start development server:**
    ```bash
    npm run dev
    ```
 
-The React app will be available at `http://localhost:5173`
+   The React frontend will be available at `http://localhost:5173`
 
 ## 📱 Pages Overview
 
-### Home Page (`/`)
-- Hero section with promotional content
-- Featured products showcase
-- Category browsing
-- Newsletter subscription
+### Public Pages
+- **Home** (`/`) - Landing page with featured products
+- **Products** (`/products`) - Product catalog with filtering
+- **Product Detail** (`/product/:id`) - Individual product view
+- **Login** (`/login`) - User authentication
+- **Register** (`/register`) - User registration
 
-### Products Page (`/products`)
-- Product grid with filtering options
-- Category and price filters
-- Sorting functionality
-- Grid/list view toggle
-- Search functionality
+### Protected Pages
+- **Profile** (`/profile`) - User profile management
+- **Cart** (`/cart`) - Shopping cart (works for guests too)
+- **Checkout** (`/checkout`) - Order completion
+- **Orders** (`/orders`) - Order history
 
-### Product Detail (`/product/:id`)
-- Product images with gallery
-- Detailed product information
-- Add to cart functionality
-- Customer reviews
-- Related products
+## 🔐 Authentication System
 
-### Shopping Cart (`/cart`)
-- Cart item management
-- Quantity adjustments
-- Order summary
-- Promo code application
+### Features
+- **Session-based authentication** using Django sessions
+- **User registration** with email validation
+- **Login/logout functionality**
+- **Profile management** with editable fields
+- **Password security** with Django's built-in hashing
 
-### User Authentication
-- **Login** (`/login`): User sign-in
-- **Register** (`/register`): New user registration
-- **Profile** (`/profile`): User profile management
+### User Flow
+1. **Guest users** can browse products and add items to cart
+2. **Registration** creates a new user account
+3. **Login** establishes a session and loads user's cart
+4. **Profile management** allows updating personal information
+5. **Logout** clears session and returns to guest state
+
+## 🛒 Cart Management
+
+### Features
+- **Persistent cart** for authenticated users
+- **Guest cart** stored in local state
+- **Cart synchronization** when user logs in
+- **Real-time updates** with backend API
+- **Quantity management** and item removal
+
+### Cart Flow
+1. **Guest users** - Cart stored in React state
+2. **Login** - Cart items transferred to backend
+3. **Authenticated users** - Cart persisted in database
+4. **Logout** - Cart cleared from backend, returns to guest state
+
+## 🗄️ Database Models
+
+### Core Models
+- **User** - Extended Django User model
+- **Category** - Product categories
+- **Product** - Product information with images
+- **Review** - Product reviews and ratings
+- **Cart** - Shopping cart items
+- **Wishlist** - User wishlist items
+- **Order** - Customer orders
+- **OrderItem** - Individual order items
+
+### Relationships
+- Products belong to Categories
+- Reviews belong to Products and Users
+- Cart items belong to Users and Products
+- Orders belong to Users
+- Order items belong to Orders and Products
 
 ## 🔌 API Endpoints
 
+### Authentication
+- `POST /api/auth/login/` - User login
+- `POST /api/auth/logout/` - User logout
+- `POST /api/auth/register/` - User registration
+- `GET /api/auth/check/` - Check authentication status
+
 ### Products
-- `GET /api/products/` - List all products
+- `GET /api/products/` - List products (with filtering)
 - `GET /api/products/{id}/` - Get product details
 - `GET /api/products/featured/` - Get featured products
-- `GET /api/products/related/?product_id={id}` - Get related products
+- `GET /api/products/related/` - Get related products
 - `POST /api/products/{id}/add_review/` - Add product review
 
 ### Categories
-- `GET /api/categories/` - List all categories
+- `GET /api/categories/` - List categories
 - `GET /api/categories/{id}/` - Get category details
-- `GET /api/categories/{id}/products/` - Get products in category
+- `GET /api/categories/{id}/products/` - Get category products
 
-### Cart (Authenticated)
+### Cart
 - `GET /api/cart/` - Get user's cart
 - `POST /api/cart/` - Add item to cart
 - `PUT /api/cart/{id}/` - Update cart item
-- `DELETE /api/cart/{id}/` - Remove item from cart
-- `GET /api/cart/total/` - Get cart total and count
+- `DELETE /api/cart/{id}/` - Remove cart item
+- `GET /api/cart/total/` - Get cart total
 
-### Wishlist (Authenticated)
-- `GET /api/wishlist/` - Get user's wishlist
-- `POST /api/wishlist/` - Add item to wishlist
-- `DELETE /api/wishlist/{id}/` - Remove item from wishlist
-- `POST /api/wishlist/toggle/` - Toggle wishlist item
-
-### Orders (Authenticated)
+### Orders
 - `GET /api/orders/` - Get user's orders
 - `POST /api/orders/` - Create new order
 - `POST /api/orders/create_from_cart/` - Create order from cart
 
-### User Profile (Authenticated)
+### User Profile
 - `GET /api/profile/` - Get user profile
 - `PUT /api/profile/` - Update user profile
 
-## 🗄️ Database Models
+## 🔧 Configuration
 
-- **Category**: Product categories with name, image, and count
-- **Product**: Products with details, pricing, images, and features
-- **Review**: Product reviews with ratings and comments
-- **Cart**: Shopping cart items for users
-- **Wishlist**: User wishlist items
-- **Order**: User orders with status tracking
-- **OrderItem**: Individual items in orders
+### Django Settings
+- **CORS_ALLOWED_ORIGINS** - Configured for React dev server
+- **REST_FRAMEWORK** - DRF settings with pagination
+- **SESSION_COOKIE_SECURE** - Set to False for development
+- **CSRF_COOKIE_SECURE** - Set to False for development
 
-## 🎨 Design System
-
-The app uses a consistent design system with:
-
-- **Colors**: Indigo primary color scheme
-- **Typography**: Clean, readable fonts
-- **Spacing**: Consistent spacing using Tailwind's scale
-- **Components**: Reusable UI components
-- **Icons**: Lucide React icon set
-
-## 🔧 Customization
-
-### Adding New Products
-Use the Django admin interface or add products through the API endpoints.
-
-### Styling Changes
-Modify Tailwind classes in the React components or update the Tailwind configuration.
-
-### API Modifications
-Add new endpoints in the Django views and update the React API service accordingly.
+### React Configuration
+- **API_BASE_URL** - Points to Django backend
+- **Credentials** - Include cookies for session management
+- **Error Handling** - Comprehensive error handling in API calls
 
 ## 🚀 Deployment
 
 ### Backend Deployment
-1. Set up a production database (PostgreSQL recommended)
-2. Configure environment variables
-3. Run migrations
-4. Deploy to your preferred hosting service (Heroku, DigitalOcean, AWS, etc.)
+1. Set `DEBUG = False` in settings
+2. Configure production database (PostgreSQL recommended)
+3. Set up static file serving
+4. Configure CORS for production domain
+5. Set secure session and CSRF settings
 
 ### Frontend Deployment
-1. Build the production version: `npm run build`
-2. Deploy the `dist` folder to your hosting service (Vercel, Netlify, etc.)
+1. Build production bundle: `npm run build`
+2. Serve static files from a web server
+3. Update API_BASE_URL to production backend
+4. Configure environment variables
 
-## 📝 Sample Data
+## 🧪 Testing
 
-The application comes with sample data including:
-- 4 categories (Men's Clothing, Women's Fashion, Electronics, Home & Garden)
-- 7 sample products with images, descriptions, and features
-- 1 test user (username: testuser, password: testpass123)
-- Sample reviews for products
+### Backend Testing
+```bash
+cd ecommerce_backend
+python manage.py test
+```
+
+### Frontend Testing
+```bash
+npm test
+```
+
+## 📝 Environment Variables
+
+### Backend (.env)
+```
+DEBUG=True
+SECRET_KEY=your-secret-key
+DATABASE_URL=sqlite:///db.sqlite3
+ALLOWED_HOSTS=localhost,127.0.0.1
+```
+
+### Frontend (.env)
+```
+VITE_API_BASE_URL=http://localhost:8000/api
+```
 
 ## 🤝 Contributing
 
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
-4. Test thoroughly
+4. Add tests if applicable
 5. Submit a pull request
 
 ## 📄 License
 
-This project is open source and available under the [MIT License](LICENSE).
+This project is licensed under the MIT License.
 
 ## 🆘 Support
 
-If you encounter any issues or have questions, please open an issue on GitHub or contact the development team.
+For support and questions:
+- Create an issue in the repository
+- Check the documentation
+- Review the API endpoints
+
+---
+
+**Note:** This is a development setup. For production deployment, additional security measures and configurations are required.

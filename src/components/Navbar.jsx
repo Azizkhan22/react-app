@@ -2,13 +2,15 @@ import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { ShoppingCart, Search, Menu, X, User, Heart ,SearchIcon} from 'lucide-react'
 import { useCart } from '../context/CartContext'
+import { useAuth } from '../context/AuthContext'
 import { MdCall, MdMail } from 'react-icons/md';
 import { FaInstagram, FaFacebook, FaYoutube, FaTwitter } from 'react-icons/fa';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')  
-  const { getCartCount } = useCart()  
+  const { getCartCount } = useCart()
+  const { user, isAuthenticated } = useAuth()
   const searchButtonRef = useRef(null)
   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
 
@@ -92,10 +94,17 @@ const Navbar = () => {
             <SearchIcon className="h-6 w-6 cursor-pointer" />
           </button>
             <div className='flex justify-center items-center space-x-2 text-[#23A6F0]'>
-              <a href="/login" className='flex items-center space-x-2'>
-              <User className="h-6 w-6 hidden lg:block" />
-              <span className='text-sm font-semibold'>Login / Signup</span>
-              </a>          
+              {isAuthenticated ? (
+                <Link to="/profile" className='flex items-center space-x-2'>
+                  <User className="h-6 w-6 hidden lg:block" />
+                  <span className='text-sm font-semibold'>{user?.first_name || user?.username}</span>
+                </Link>
+              ) : (
+                <Link to="/login" className='flex items-center space-x-2'>
+                  <User className="h-6 w-6 hidden lg:block" />
+                  <span className='text-sm font-semibold'>Login / Signup</span>
+                </Link>
+              )}          
             </div>
             <Link to="/wishlist" className="text-gray-700 text-[#23A6F0]">
               <Heart className="h-6 w-6 text-[#23A6F0]" />
