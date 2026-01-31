@@ -14,7 +14,7 @@ from pathlib import Path
 from decouple import config
 
 client_url = config('CLIENT_URL')
-
+allowed_host = config("ALLOWED_HOST")
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-your-secret-key-here'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [client_url]
+ALLOWED_HOSTS = [allowed_host]
 
 
 # Application definition
