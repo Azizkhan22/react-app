@@ -20,6 +20,7 @@ class ApiService {
       credentials: 'include', // Include cookies for session management
       headers: {
         'Content-Type': 'application/json',
+        'bypass-tunnel-reminder': 1,
         'X-Requested-With': 'XMLHttpRequest', // Helps with CSRF
         ...(csrfToken ? { 'X-CSRFToken': csrfToken } : {}),
         ...options.headers,
