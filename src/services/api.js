@@ -19,8 +19,7 @@ class ApiService {
     const config = {
       credentials: 'include', // Include cookies for session management
       headers: {
-        'Content-Type': 'application/json',
-        'bypass-tunnel-reminder': 1,
+        'Content-Type': 'application/json',        
         'X-Requested-With': 'XMLHttpRequest', // Helps with CSRF
         ...(csrfToken ? { 'X-CSRFToken': csrfToken } : {}),
         ...options.headers,
